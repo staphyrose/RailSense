@@ -1,0 +1,4703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>RailSense — Engineer Control Center</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+  rel="stylesheet"
+>
+
+<style>
+
+/* =========================================================
+   TOKENS
+========================================================= */
+
+:root{
+
+  --bg:#050506;
+  --bg-soft:#0a0a0c;
+
+  --glass:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.055),
+      rgba(255,255,255,.02)
+    );
+
+  --hairline:rgba(255,255,255,.09);
+  --hairline-soft:rgba(255,255,255,.06);
+
+  --text:#f5f5f7;
+  --text-secondary:rgba(245,245,247,.64);
+  --text-tertiary:rgba(245,245,247,.38);
+
+  --blue:#0a84ff;
+  --amber:#ff9f0a;
+  --green:#32d74b;
+  --red:#ff453a;
+
+  --radius-lg:28px;
+  --radius-md:18px;
+  --radius-sm:11px;
+
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+
+  min-height:100vh;
+
+  color:var(--text);
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  background:
+
+    radial-gradient(
+      900px 500px at 18% -8%,
+      rgba(10,132,255,.10),
+      transparent 60%
+    ),
+
+    radial-gradient(
+      1000px 600px at 100% 0%,
+      rgba(255,159,10,.07),
+      transparent 55%
+    ),
+
+    var(--bg);
+}
+
+button,
+input{
+  font-family:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.tnum{
+  font-variant-numeric:tabular-nums;
+}
+
+
+/* =========================================================
+   NAV
+========================================================= */
+
+.nav{
+
+  position:sticky;
+  top:0;
+
+  z-index:50;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  padding:18px 40px;
+
+  background:rgba(5,5,6,.82);
+
+  backdrop-filter:
+    blur(20px)
+    saturate(140%);
+
+  border-bottom:
+    1px solid
+    var(--hairline-soft);
+}
+
+.nav-brand{
+
+  display:flex;
+  align-items:center;
+
+  gap:11px;
+}
+
+.nav-mark{
+
+  width:30px;
+  height:30px;
+
+  border-radius:8px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:
+    linear-gradient(
+      155deg,
+      #1c1c1e,
+      #000
+    );
+
+  border:
+    1px solid
+    var(--hairline);
+}
+
+.nav-mark svg{
+  width:16px;
+  height:16px;
+}
+
+.nav-name{
+
+  font-size:15px;
+  font-weight:600;
+}
+
+.nav-right{
+
+  display:flex;
+  align-items:center;
+
+  gap:12px;
+}
+
+.status-pill{
+
+  display:flex;
+  align-items:center;
+
+  gap:8px;
+
+  padding:
+    8px
+    14px
+    8px
+    10px;
+
+  border-radius:999px;
+
+  border:
+    1px solid
+    var(--hairline);
+
+  background:
+    rgba(255,255,255,.03);
+
+  color:var(--text-tertiary);
+
+  font-size:13px;
+}
+
+.status-dot{
+
+  width:7px;
+  height:7px;
+
+  border-radius:50%;
+
+  background:
+    var(--text-tertiary);
+}
+
+.status-pill.live{
+
+  color:#68e884;
+
+  background:
+    rgba(50,215,75,.07);
+
+  border-color:
+    rgba(50,215,75,.22);
+}
+
+.status-pill.live .status-dot{
+
+  background:
+    var(--green);
+
+  animation:
+    pulse 1.6s infinite;
+}
+
+@keyframes pulse{
+
+  0%{
+    box-shadow:
+      0 0 0 0
+      rgba(50,215,75,.5);
+  }
+
+  70%{
+    box-shadow:
+      0 0 0 8px
+      rgba(50,215,75,0);
+  }
+
+  100%{
+    box-shadow:
+      0 0 0 0
+      rgba(50,215,75,0);
+  }
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn{
+
+  border:none;
+
+  padding:
+    10px
+    20px;
+
+  border-radius:999px;
+
+  font-size:13px;
+  font-weight:600;
+
+  transition:
+    .15s ease;
+}
+
+.btn:active{
+  transform:scale(.97);
+}
+
+.btn-solid{
+
+  color:#090909;
+
+  background:#f5f5f7;
+}
+
+.btn-solid:hover{
+  filter:brightness(.92);
+}
+
+.btn-danger{
+
+  color:#ff8a80;
+
+  background:
+    rgba(255,69,58,.12);
+
+  border:
+    1px solid
+    rgba(255,69,58,.28);
+}
+
+.btn-danger:hover{
+  background:
+    rgba(255,69,58,.20);
+}
+
+.btn-green{
+
+  color:#68e884;
+
+  background:
+    rgba(50,215,75,.10);
+
+  border:
+    1px solid
+    rgba(50,215,75,.25);
+}
+
+.btn-green:hover{
+  background:
+    rgba(50,215,75,.18);
+}
+
+.btn-blue{
+
+  color:#7bbcff;
+
+  background:
+    rgba(10,132,255,.10);
+
+  border:
+    1px solid
+    rgba(10,132,255,.25);
+}
+
+.btn-blue:hover{
+  background:
+    rgba(10,132,255,.18);
+}
+
+.btn-red{
+
+  color:#ff8a80;
+
+  background:
+    rgba(255,69,58,.10);
+
+  border:
+    1px solid
+    rgba(255,69,58,.25);
+}
+
+.btn-red:hover{
+  background:
+    rgba(255,69,58,.18);
+}
+
+.btn-ghost{
+
+  color:var(--text-secondary);
+
+  background:transparent;
+
+  border:
+    1px solid
+    var(--hairline);
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+
+  max-width:900px;
+
+  margin:auto;
+
+  text-align:center;
+
+  padding:
+    76px
+    24px
+    54px;
+}
+
+.hero h1{
+
+  font-size:
+    clamp(42px,6vw,72px);
+
+  letter-spacing:-.04em;
+
+  line-height:1.02;
+}
+
+.hero p{
+
+  margin-top:18px;
+
+  color:var(--text-secondary);
+
+  font-size:
+    clamp(15px,2vw,19px);
+}
+
+
+/* =========================================================
+   SHELL
+========================================================= */
+
+.shell{
+
+  width:
+    min(1440px,94vw);
+
+  margin:auto;
+
+  padding-bottom:100px;
+}
+
+.glass{
+
+  background:var(--glass);
+
+  border:
+    1px solid
+    var(--hairline);
+
+  border-radius:
+    var(--radius-md);
+
+  backdrop-filter:
+    blur(16px);
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.stat-panel{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(4,1fr);
+
+  overflow:hidden;
+
+  margin-bottom:20px;
+
+  border-radius:
+    var(--radius-lg);
+}
+
+.stat{
+
+  min-width:0;
+
+  padding:
+    28px 30px;
+
+  border-right:
+    1px solid
+    var(--hairline-soft);
+}
+
+.stat:last-child{
+  border-right:none;
+}
+
+.stat-value{
+
+  font-size:42px;
+
+  font-weight:700;
+
+  letter-spacing:-.03em;
+}
+
+.stat-label{
+
+  margin-top:6px;
+
+  color:var(--text-tertiary);
+
+  font-size:13px;
+}
+
+
+/* =========================================================
+   TRAIN MONITOR
+========================================================= */
+
+.train-panel{
+
+  margin-bottom:20px;
+}
+
+.panel-head{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  gap:20px;
+
+  padding:
+    22px 26px;
+
+  border-bottom:
+    1px solid
+    var(--hairline-soft);
+}
+
+.panel-title{
+
+  font-size:18px;
+
+  font-weight:600;
+}
+
+.panel-sub{
+
+  margin-top:4px;
+
+  color:var(--text-tertiary);
+
+  font-size:12.5px;
+}
+
+.train-grid{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(4,1fr);
+
+  gap:12px;
+
+  padding:18px;
+}
+
+.train-card{
+
+  min-width:0;
+
+  padding:18px;
+
+  border:
+    1px solid
+    var(--hairline);
+
+  border-radius:
+    var(--radius-md);
+
+  background:
+    rgba(255,255,255,.025);
+
+  transition:
+    transform .2s var(--ease),
+    background .2s ease;
+}
+
+.train-card:hover{
+
+  transform:
+    translateY(-2px);
+
+  background:
+    rgba(255,255,255,.045);
+}
+
+.train-top{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:flex-start;
+
+  gap:10px;
+}
+
+.train-number{
+
+  font-size:17px;
+
+  font-weight:700;
+}
+
+.train-name{
+
+  margin-top:5px;
+
+  min-height:34px;
+
+  color:var(--text-secondary);
+
+  font-size:11.5px;
+
+  line-height:1.45;
+}
+
+.train-route{
+
+  margin-top:13px;
+
+  color:var(--text-tertiary);
+
+  font-size:11.5px;
+}
+
+.train-location{
+
+  margin-top:12px;
+
+  padding-top:12px;
+
+  border-top:
+    1px solid
+    var(--hairline-soft);
+
+  font-size:12px;
+
+  color:var(--text-secondary);
+}
+
+.train-detection{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  gap:8px;
+
+  margin-top:12px;
+}
+
+.class-pill{
+
+  display:inline-flex;
+
+  align-items:center;
+
+  gap:6px;
+
+  padding:
+    5px 10px;
+
+  border-radius:999px;
+
+  font-size:10.5px;
+
+  font-weight:600;
+
+  border:1px solid transparent;
+}
+
+.class-normal{
+
+  color:#68e884;
+
+  background:
+    rgba(50,215,75,.08);
+
+  border-color:
+    rgba(50,215,75,.18);
+}
+
+.class-abnormal{
+
+  color:#ffbf5c;
+
+  background:
+    rgba(255,159,10,.10);
+
+  border-color:
+    rgba(255,159,10,.22);
+}
+
+.class-critical{
+
+  color:#ff8a80;
+
+  background:
+    rgba(255,69,58,.12);
+
+  border-color:
+    rgba(255,69,58,.25);
+}
+
+.class-pending{
+
+  color:var(--text-tertiary);
+
+  background:
+    rgba(255,255,255,.04);
+
+  border-color:
+    var(--hairline);
+}
+
+.modality{
+
+  color:var(--text-tertiary);
+
+  font-size:10.5px;
+
+  font-weight:600;
+}
+
+.train-status{
+
+  margin-top:10px;
+
+  color:var(--text-tertiary);
+
+  font-size:10.5px;
+
+  line-height:1.4;
+}
+
+
+/* =========================================================
+   CONTENT GRID
+========================================================= */
+
+.content-grid{
+
+  display:grid;
+
+  grid-template-columns:
+    minmax(0,1.9fr)
+    minmax(300px,.9fr);
+
+  gap:20px;
+
+  align-items:start;
+}
+
+.side-stack{
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:20px;
+}
+
+
+/* =========================================================
+   TICKET TABLE
+========================================================= */
+
+.ticket-scroll{
+
+  width:100%;
+
+  overflow-x:auto;
+}
+
+table{
+
+  width:100%;
+
+  border-collapse:collapse;
+
+  min-width:780px;
+}
+
+th{
+
+  padding:
+    18px 18px
+    12px;
+
+  text-align:left;
+
+  color:var(--text-tertiary);
+
+  font-size:10.5px;
+
+  font-weight:600;
+
+  text-transform:uppercase;
+
+  letter-spacing:.06em;
+}
+
+td{
+
+  padding:
+    15px 18px;
+
+  border-top:
+    1px solid
+    var(--hairline-soft);
+
+  font-size:13px;
+
+  white-space:nowrap;
+}
+
+tbody tr{
+
+  cursor:pointer;
+
+  transition:
+    background .15s ease;
+}
+
+tbody tr:hover{
+
+  background:
+    rgba(255,255,255,.035);
+}
+
+.tid{
+
+  color:#7bbcff;
+
+  font-weight:600;
+}
+
+.resolve-btn{
+
+  height:31px;
+
+  padding:
+    0 13px;
+
+  border-radius:999px;
+
+  border:
+    1px solid
+    rgba(50,215,75,.25);
+
+  background:
+    rgba(50,215,75,.08);
+
+  color:#68e884;
+
+  font-size:11px;
+
+  font-weight:600;
+
+  cursor:pointer;
+}
+
+.resolve-btn:hover{
+
+  background:
+    rgba(50,215,75,.18);
+}
+
+.empty-state{
+
+  padding:
+    55px 25px;
+
+  text-align:center;
+}
+
+.empty-state strong{
+
+  display:block;
+
+  margin-bottom:6px;
+
+  font-size:15px;
+}
+
+.empty-state span{
+
+  color:var(--text-tertiary);
+
+  font-size:12.5px;
+}
+
+
+/* =========================================================
+   PILLS
+========================================================= */
+
+.source-pill{
+
+  display:inline-flex;
+
+  align-items:center;
+
+  gap:5px;
+
+  padding:
+    5px 9px;
+
+  border-radius:999px;
+
+  font-size:10.5px;
+
+  font-weight:600;
+}
+
+.audio-pill{
+
+  color:#7bbcff;
+
+  background:
+    rgba(10,132,255,.10);
+
+  border:
+    1px solid
+    rgba(10,132,255,.22);
+}
+
+.image-pill{
+
+  color:#ffbf5c;
+
+  background:
+    rgba(255,159,10,.10);
+
+  border:
+    1px solid
+    rgba(255,159,10,.22);
+}
+
+
+/* =========================================================
+   SYSTEM HEALTH
+========================================================= */
+
+.health-row{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  gap:10px;
+
+  padding:
+    14px 22px;
+
+  border-top:
+    1px solid
+    var(--hairline-soft);
+
+  font-size:12.5px;
+}
+
+.health-status{
+
+  color:var(--text-tertiary);
+
+  font-size:11px;
+
+  text-align:right;
+}
+
+.health-status.up{
+  color:#68e884;
+}
+
+.health-status.pending{
+  color:#ffbf5c;
+}
+
+
+/* =========================================================
+   HOTSPOTS
+========================================================= */
+
+.hotspot{
+
+  padding:
+    15px 22px;
+
+  border-top:
+    1px solid
+    var(--hairline-soft);
+}
+
+.hotspot:first-child{
+  border-top:none;
+}
+
+.hotspot-top{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  gap:10px;
+
+  font-size:12.5px;
+}
+
+.hotspot-count{
+  font-weight:700;
+}
+
+.bar-track{
+
+  height:4px;
+
+  margin-top:9px;
+
+  overflow:hidden;
+
+  border-radius:5px;
+
+  background:
+    rgba(255,255,255,.07);
+}
+
+.bar-fill{
+
+  height:100%;
+
+  border-radius:5px;
+
+  background:
+    var(--amber);
+}
+
+.hotspot-meta{
+
+  margin-top:7px;
+
+  color:var(--text-tertiary);
+
+  font-size:10.5px;
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.overlay{
+
+  position:fixed;
+
+  inset:0;
+
+  z-index:100;
+
+  display:none;
+
+  align-items:flex-start;
+
+  justify-content:center;
+
+  padding:
+    45px 20px;
+
+  overflow-y:auto;
+
+  background:
+    rgba(0,0,0,.78);
+
+  backdrop-filter:
+    blur(7px);
+}
+
+.overlay.show{
+  display:flex;
+}
+
+.modal{
+
+  width:
+    min(1050px,100%);
+
+  background:#0d0d0f;
+
+  border:
+    1px solid
+    var(--hairline);
+
+  border-radius:
+    var(--radius-lg);
+
+  box-shadow:
+    0 40px 100px
+    rgba(0,0,0,.65);
+}
+
+.modal-head{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:flex-start;
+
+  gap:20px;
+
+  padding:
+    25px 30px;
+
+  border-bottom:
+    1px solid
+    var(--hairline-soft);
+}
+
+.modal-title{
+
+  font-size:21px;
+
+  font-weight:700;
+}
+
+.modal-sub{
+
+  margin-top:5px;
+
+  color:var(--text-tertiary);
+
+  font-size:12.5px;
+}
+
+.close-btn{
+
+  width:32px;
+  height:32px;
+
+  border-radius:50%;
+
+  border:
+    1px solid
+    var(--hairline);
+
+  background:
+    rgba(255,255,255,.03);
+
+  color:var(--text-secondary);
+
+  font-size:18px;
+}
+
+.modal-body{
+
+  padding:28px;
+}
+
+.modal-footer{
+
+  display:flex;
+
+  justify-content:flex-end;
+
+  gap:10px;
+
+  padding:
+    18px 28px;
+
+  border-top:
+    1px solid
+    var(--hairline-soft);
+}
+
+
+/* =========================================================
+   ROUTE
+========================================================= */
+
+.route-card{
+
+  padding:
+    24px 28px 45px;
+
+  margin-bottom:20px;
+
+  border:
+    1px solid
+    var(--hairline);
+
+  border-radius:
+    var(--radius-md);
+
+  background:
+    rgba(255,255,255,.025);
+}
+
+.route-label{
+
+  margin-bottom:30px;
+
+  color:var(--text-tertiary);
+
+  font-size:11.5px;
+}
+
+.route-label b{
+  color:var(--text-secondary);
+}
+
+.route-track{
+
+  position:relative;
+
+  height:2px;
+
+  margin:
+    0 10px;
+
+  background:
+    var(--hairline);
+}
+
+.route-stop{
+
+  position:absolute;
+
+  top:50%;
+
+  width:8px;
+  height:8px;
+
+  transform:
+    translate(-50%,-50%);
+
+  border-radius:50%;
+
+  background:#0d0d0f;
+
+  border:
+    1.5px solid
+    var(--text-tertiary);
+}
+
+.route-stop.boundary{
+
+  border-color:
+    var(--blue);
+}
+
+.route-stop-label{
+
+  position:absolute;
+
+  top:16px;
+
+  left:50%;
+
+  transform:
+    translateX(-50%);
+
+  color:var(--text-tertiary);
+
+  font-size:9.5px;
+
+  white-space:nowrap;
+}
+
+.route-defect{
+
+  position:absolute;
+
+  top:50%;
+
+  width:14px;
+  height:14px;
+
+  transform:
+    translate(-50%,-50%);
+
+  z-index:3;
+
+  border-radius:50%;
+}
+
+.route-defect.abnormal{
+
+  background:
+    var(--amber);
+
+  box-shadow:
+    0 0 0 7px
+    rgba(255,159,10,.15);
+}
+
+.route-defect.critical{
+
+  background:
+    var(--red);
+
+  box-shadow:
+    0 0 0 7px
+    rgba(255,69,58,.18);
+
+  animation:
+    criticalPulse 1.2s infinite;
+}
+
+@keyframes criticalPulse{
+
+  0%,100%{
+    box-shadow:
+      0 0 0 7px
+      rgba(255,69,58,.22);
+  }
+
+  50%{
+    box-shadow:
+      0 0 0 14px
+      rgba(255,69,58,0);
+  }
+}
+
+.route-coords{
+
+  position:absolute;
+
+  bottom:-30px;
+
+  left:50%;
+
+  transform:
+    translateX(-50%);
+
+  color:var(--text-tertiary);
+
+  font-size:9.5px;
+
+  white-space:nowrap;
+}
+
+
+/* =========================================================
+   EVIDENCE GRID
+========================================================= */
+
+.detail-grid{
+
+  display:grid;
+
+  grid-template-columns:
+    1.35fr .65fr;
+
+  gap:18px;
+}
+
+
+/* =========================================================
+   AUDIO EVIDENCE VISUALS (WAVEFORM / MFCC)
+========================================================= */
+
+.evidence-card{
+
+  overflow:hidden;
+
+  border:
+    1px solid
+    var(--hairline);
+
+  border-radius:
+    var(--radius-md);
+
+  background:
+    rgba(255,255,255,.02);
+}
+
+.evidence-label{
+
+  padding:
+    12px 15px;
+
+  color:var(--text-tertiary);
+
+  font-size:11px;
+
+  border-bottom:
+    1px solid
+    var(--hairline-soft);
+}
+
+.spectrogram-box{
+
+  min-height:260px;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  padding:14px;
+
+  background:#080809;
+
+  overflow:hidden;
+}
+
+.image-evidence-box{
+  min-height:260px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:14px;
+  background:#080809;
+  overflow:hidden;
+}
+
+.image-evidence-box img{
+  display:block;
+  width:100%;
+  max-height:420px;
+  object-fit:contain;
+  border-radius:10px;
+}
+
+
+.spectrogram-box img{
+
+  display:block;
+
+  width:100%;
+
+  max-height:300px;
+
+  object-fit:contain;
+
+  image-rendering:auto;
+}
+
+.spectrogram-loading{
+
+  color:var(--text-tertiary);
+
+  font-size:12px;
+
+  text-align:center;
+}
+
+.spectrogram-caption{
+
+  padding:
+    10px 14px;
+
+  color:var(--text-tertiary);
+
+  font-size:10px;
+
+  border-top:
+    1px solid
+    var(--hairline-soft);
+}
+
+
+/* =========================================================
+   INFO
+========================================================= */
+
+.info-card{
+
+  overflow:hidden;
+
+  border:
+    1px solid
+    var(--hairline);
+
+  border-radius:
+    var(--radius-md);
+}
+
+.info-row{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  gap:15px;
+
+  padding:
+    12px 16px;
+
+  border-top:
+    1px solid
+    var(--hairline-soft);
+
+  font-size:12px;
+}
+
+.info-row:first-child{
+  border-top:none;
+}
+
+.info-row span:first-child{
+  color:var(--text-tertiary);
+}
+
+.info-row b{
+  text-align:right;
+}
+
+
+/* =========================================================
+   CRITICAL ACTIONS
+========================================================= */
+
+.critical-actions{
+
+  display:none;
+
+  margin-top:18px;
+
+  padding:18px;
+
+  border:
+    1px solid
+    rgba(255,69,58,.25);
+
+  border-radius:
+    var(--radius-md);
+
+  background:
+    rgba(255,69,58,.055);
+}
+
+.critical-actions.show{
+  display:block;
+}
+
+.critical-title{
+
+  color:#ff8a80;
+
+  font-size:14px;
+
+  font-weight:700;
+}
+
+.critical-text{
+
+  margin-top:5px;
+
+  color:var(--text-tertiary);
+
+  font-size:11.5px;
+
+  line-height:1.5;
+}
+
+.critical-buttons{
+
+  display:flex;
+
+  gap:10px;
+
+  flex-wrap:wrap;
+
+  margin-top:14px;
+}
+
+.action-message{
+
+  margin-top:12px;
+
+  color:var(--text-tertiary);
+
+  font-size:11px;
+}
+
+
+/* =========================================================
+   PROCESSING
+========================================================= */
+
+.timeline{
+
+  margin-top:18px;
+
+  padding:20px;
+
+  border:
+    1px solid
+    var(--hairline);
+
+  border-radius:
+    var(--radius-md);
+}
+
+.timeline-title{
+
+  margin-bottom:16px;
+
+  font-size:14px;
+
+  font-weight:600;
+}
+
+.steps{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(5,1fr);
+
+  gap:10px;
+}
+
+.step{
+
+  padding-top:9px;
+
+  border-top:
+    2px solid
+    var(--blue);
+}
+
+.step-number{
+
+  color:#7bbcff;
+
+  font-size:9.5px;
+
+  font-weight:700;
+}
+
+.step-name{
+
+  display:block;
+
+  margin-top:8px;
+
+  color:var(--text-secondary);
+
+  font-size:10.5px;
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast{
+
+  position:fixed;
+
+  right:25px;
+
+  bottom:25px;
+
+  z-index:200;
+
+  max-width:380px;
+
+  padding:
+    14px 17px;
+
+  border:
+    1px solid
+    var(--hairline);
+
+  border-radius:
+    13px;
+
+  background:
+    rgba(20,20,22,.95);
+
+  color:var(--text-secondary);
+
+  font-size:12px;
+
+  opacity:0;
+
+  transform:
+    translateY(15px);
+
+  pointer-events:none;
+
+  transition:
+    .25s ease;
+}
+
+.toast.show{
+
+  opacity:1;
+
+  transform:
+    translateY(0);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1150px){
+
+  .train-grid{
+    grid-template-columns:
+      repeat(2,1fr);
+  }
+
+  .content-grid{
+    grid-template-columns:1fr;
+  }
+
+}
+
+@media(max-width:800px){
+
+  .nav{
+    padding:
+      15px 18px;
+  }
+
+  .nav-right{
+    gap:7px;
+  }
+
+  .status-pill{
+    display:none;
+  }
+
+  .shell{
+    width:94vw;
+  }
+
+  .stat-panel{
+    grid-template-columns:
+      repeat(2,1fr);
+  }
+
+  .stat:nth-child(2){
+    border-right:none;
+  }
+
+  .detail-grid{
+    grid-template-columns:1fr;
+  }
+
+  .steps{
+    grid-template-columns:
+      repeat(2,1fr);
+  }
+
+}
+
+@media(max-width:600px){
+
+  .hero{
+    padding:
+      55px 18px 40px;
+  }
+
+  .train-grid{
+    grid-template-columns:1fr;
+  }
+
+  .stat-panel{
+    grid-template-columns:1fr;
+  }
+
+  .stat{
+    border-right:none;
+    border-top:
+      1px solid
+      var(--hairline-soft);
+  }
+
+  .stat:first-child{
+    border-top:none;
+  }
+
+  .modal-body{
+    padding:18px;
+  }
+
+  .route-card{
+    padding:
+      20px
+      16px
+      45px;
+  }
+
+  .route-stop-label{
+    font-size:8px;
+  }
+
+  .critical-buttons{
+    flex-direction:column;
+  }
+
+  .critical-buttons .btn{
+    width:100%;
+  }
+
+}
+
+
+
+/* =========================================================
+   MAINTENANCE DATE MODAL
+========================================================= */
+
+.maintenance-modal{
+  position:fixed;
+  inset:0;
+  z-index:10000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(0,0,0,.68);
+  backdrop-filter:blur(8px);
+}
+
+.maintenance-modal.show{
+  display:flex;
+}
+
+.maintenance-modal-card{
+  width:min(390px,94vw);
+  padding:24px;
+  border-radius:20px;
+  border:1px solid var(--hairline);
+  background:#111113;
+  box-shadow:0 25px 80px rgba(0,0,0,.55);
+}
+
+.maintenance-modal-card h3{
+  font-size:18px;
+  font-weight:700;
+  margin-bottom:7px;
+}
+
+.maintenance-modal-card p{
+  color:var(--text-secondary);
+  font-size:12.5px;
+  line-height:1.5;
+  margin-bottom:18px;
+}
+
+.maintenance-date-input{
+  width:100%;
+  padding:12px 14px;
+  border-radius:12px;
+  border:1px solid var(--hairline);
+  background:#09090b;
+  color:var(--text);
+  font:inherit;
+  font-size:14px;
+  outline:none;
+}
+
+.maintenance-date-input:focus{
+  border-color:rgba(10,132,255,.55);
+}
+
+.maintenance-modal-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  margin-top:18px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     NAV
+========================================================= -->
+
+<nav class="nav">
+
+  <div class="nav-brand">
+
+    <div class="nav-mark">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+
+        <path
+          d="M4 17L10 4h4l6 13"
+          stroke="#ff9f0a"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+
+        <path
+          d="M4 17h16"
+          stroke="#f5f5f7"
+          stroke-width="1.6"
+          stroke-linecap="round"
+        />
+
+      </svg>
+
+    </div>
+
+    <span class="nav-name">
+      RailSense Engineer Control Center
+    </span>
+
+  </div>
+
+
+  <div class="nav-right">
+
+    <span
+      id="statusPill"
+      class="status-pill"
+    >
+
+      <span class="status-dot"></span>
+
+      Detection idle
+
+    </span>
+
+
+    <button
+      id="simButton"
+      class="btn btn-solid"
+      onclick="toggleSimulation()"
+    >
+      Start Live Inspection
+    </button>
+
+  </div>
+
+</nav>
+
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section class="hero">
+
+  <h1>
+    RailSense
+  </h1>
+
+  <p>
+    Live AI inspection across the 8 RailSense Express trains
+  </p>
+
+</section>
+
+
+<div class="shell">
+
+
+<!-- =========================================================
+     STATS
+========================================================= -->
+
+<section class="glass stat-panel">
+
+  <div class="stat">
+
+    <div
+      id="total"
+      class="stat-value tnum"
+    >
+      0
+    </div>
+
+    <div class="stat-label">
+      Total detections
+    </div>
+
+  </div>
+
+
+  <div class="stat">
+
+    <div
+      id="active"
+      class="stat-value tnum"
+      style="color:var(--amber)"
+    >
+      0
+    </div>
+
+    <div class="stat-label">
+      Active tickets
+    </div>
+
+  </div>
+
+
+  <div class="stat">
+
+    <div
+      id="resolved"
+      class="stat-value tnum"
+      style="color:#68e884"
+    >
+      0
+    </div>
+
+    <div class="stat-label">
+      Resolved
+    </div>
+
+  </div>
+
+
+  <div class="stat">
+
+    <div
+      id="criticalCount"
+      class="stat-value tnum"
+      style="color:#ff8a80"
+    >
+      0
+    </div>
+
+    <div class="stat-label">
+      Critical defects
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     TRAIN MONITOR
+========================================================= -->
+
+<section class="glass train-panel">
+
+  <div class="panel-head">
+
+    <div>
+
+      <div class="panel-sub">
+        Live inspection status across all 8 long-distance trains
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div
+    id="trainGrid"
+    class="train-grid"
+  ></div>
+
+</section>
+
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<div class="content-grid">
+
+
+<!-- =========================================================
+     TICKETS
+========================================================= -->
+
+<section class="glass">
+
+  <div class="panel-head">
+
+    <div>
+
+      <div class="panel-title">
+        Active defect tickets
+      </div>
+
+      <div
+        id="ticketCount"
+        class="panel-sub"
+      >
+        0 active
+      </div>
+
+    </div>
+
+
+    <div
+      style="
+        display:flex;
+        align-items:center;
+        gap:8px;
+      "
+    >
+
+      <input
+        id="trainSearch"
+        type="text"
+        inputmode="numeric"
+        autocomplete="off"
+        placeholder="Train number"
+        style="
+          width:125px;
+          height:36px;
+          padding:0 12px;
+          border-radius:999px;
+          border:1px solid var(--hairline);
+          background:rgba(255,255,255,.03);
+          color:var(--text);
+          outline:none;
+          font-size:12px;
+        "
+      >
+
+    </div>
+
+  </div>
+
+
+  <div class="ticket-scroll">
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>Ticket</th>
+          <th>Train</th>
+          <th>Source</th>
+          <th>Prediction</th>
+          <th>Confidence</th>
+          <th>Class</th>
+          <th>Action</th>
+
+        </tr>
+
+      </thead>
+
+
+      <tbody
+        id="ticketBody"
+      ></tbody>
+
+    </table>
+
+  </div>
+
+
+  <div
+    id="emptyState"
+    class="empty-state"
+  >
+
+    <strong>
+      No active defect tickets
+    </strong>
+
+    <span>
+      Start live inspection to feed real testing data into RailSense.
+    </span>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     SIDE
+========================================================= -->
+
+<div class="side-stack">
+
+
+<!-- SYSTEM HEALTH -->
+
+<section class="glass">
+
+  <div class="panel-head">
+
+    <div class="panel-title">
+      System health
+    </div>
+
+  </div>
+
+
+  <div id="healthRows"></div>
+
+</section>
+
+
+<!-- HOTSPOTS -->
+
+<section class="glass">
+
+  <div class="panel-head">
+
+    <div>
+
+      <div class="panel-title">
+        Defect hotspots
+      </div>
+
+      <div class="panel-sub">
+        Based on detected tickets
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div id="hotspotsList"></div>
+
+</section>
+
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =========================================================
+     TICKET MODAL
+========================================================= -->
+
+<div
+  id="overlay"
+  class="overlay"
+>
+
+  <div class="modal">
+
+
+    <div class="modal-head">
+
+      <div>
+
+        <div
+          id="modalTitle"
+          class="modal-title"
+        >
+          Defect overview
+        </div>
+
+        <div
+          id="modalSubtitle"
+          class="modal-sub"
+        ></div>
+
+      </div>
+
+
+      <button
+        class="close-btn"
+        onclick="closeModal()"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div
+      id="modalBody"
+      class="modal-body"
+    ></div>
+
+
+    <div class="modal-footer">
+
+      <button
+        class="btn btn-ghost"
+        onclick="closeModal()"
+      >
+        Close
+      </button>
+
+
+      <button
+        id="resolveButton"
+        class="btn btn-green"
+      >
+        Resolve ticket
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================================================
+     TOAST
+========================================================= -->
+
+<div
+  id="toast"
+  class="toast"
+></div>
+
+
+<script>
+
+/* =========================================================
+   API
+========================================================= */
+
+/*
+   IMPORTANT:
+   Empty string means same-origin.
+
+   Flask is running on:
+   http://127.0.0.1:5000
+
+   Therefore:
+   /api/...
+   automatically goes to port 5000.
+*/
+
+const API = "";
+
+
+let simulationRunning = false;
+
+let simulationTimer = null;
+
+let currentTicket = null;
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function esc(value){
+
+  return String(value ?? "")
+    .replace(
+      /[&<>"']/g,
+      function(c){
+
+        return {
+          "&":"&amp;",
+          "<":"&lt;",
+          ">":"&gt;",
+          '"':"&quot;",
+          "'":"&#39;"
+        }[c];
+
+      }
+    );
+
+}
+
+
+async function api(
+  path,
+  options={}
+){
+
+  const response =
+    await fetch(
+      API + path,
+      options
+    );
+
+  if(!response.ok){
+
+    let message =
+      "Request failed.";
+
+    try{
+
+      const data =
+        await response.json();
+
+      message =
+        data.message ||
+        data.error ||
+        message;
+
+    }catch(error){}
+
+    throw new Error(
+      message
+    );
+  }
+
+  return response.json();
+
+}
+
+
+function showToast(
+  message
+){
+
+  const toast =
+    document.getElementById(
+      "toast"
+    );
+
+  toast.textContent =
+    message;
+
+  toast.classList.add(
+    "show"
+  );
+
+  clearTimeout(
+    toast._timer
+  );
+
+  toast._timer =
+    setTimeout(
+      function(){
+
+        toast.classList.remove(
+          "show"
+        );
+
+      },
+      3500
+    );
+
+}
+
+
+/* =========================================================
+   CLASS HELPERS
+========================================================= */
+
+function classNameFor(
+  severity
+){
+
+  if(
+    severity === "Critical"
+  ){
+
+    return "class-critical";
+
+  }
+
+  if(
+    severity === "Abnormal"
+  ){
+
+    return "class-abnormal";
+
+  }
+
+  if(
+    severity === "Normal"
+  ){
+
+    return "class-normal";
+
+  }
+
+  return "class-pending";
+
+}
+
+
+function sourceClass(
+  source
+){
+
+  return source === "AUDIO"
+    ? "audio-pill"
+    : "image-pill";
+
+}
+
+
+/* =========================================================
+   TRAIN MONITOR
+========================================================= */
+
+async function loadTrains(){
+
+  try{
+
+    const data =
+      await api(
+        "/api/simulation/status"
+      );
+
+    simulationRunning =
+      !!data.running;
+
+    updateSimulationUI();
+
+    renderTrains(
+      data.trains || []
+    );
+
+  }catch(error){
+
+    console.error(
+      "Train loading error:",
+      error
+    );
+
+  }
+
+}
+
+
+function renderTrains(
+  trains
+){
+
+  const container =
+    document.getElementById(
+      "trainGrid"
+    );
+
+  if(!trains.length){
+
+    container.innerHTML =
+      `
+        <div
+          style="
+            grid-column:1/-1;
+            padding:35px;
+            text-align:center;
+            color:var(--text-tertiary);
+          "
+        >
+          No train data available.
+        </div>
+      `;
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    trains.map(
+      function(train){
+
+        const severity =
+          train.severity ||
+          "Normal";
+
+        const prediction =
+          train.prediction ||
+          "Normal";
+
+        const modality =
+          train.modality ||
+          "WAITING";
+
+        const confidence =
+          Number(
+            train.confidence || 0
+          );
+
+
+        let displayClass =
+          severity;
+
+        if(
+          prediction ===
+          "Image model pending"
+        ){
+
+          displayClass =
+            "Pending";
+
+        }
+
+
+        return `
+
+          <div class="train-card">
+
+            <div class="train-top">
+
+              <div>
+
+                <div class="train-number">
+                  ${esc(train.train_number)}
+                </div>
+
+                <div class="train-name">
+                  ${esc(train.name)}
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="train-route">
+
+              ${esc(train.from_station)}
+              →
+              ${esc(train.to_station)}
+
+            </div>
+
+
+            <div class="train-location">
+
+              ${esc(train.location_name)}
+
+              <br>
+
+              <span
+                style="
+                  color:var(--text-tertiary);
+                  font-size:10px;
+                "
+              >
+
+                ${Number(train.latitude || 0).toFixed(5)},
+                ${Number(train.longitude || 0).toFixed(5)}
+
+              </span>
+
+            </div>
+
+
+            <div class="train-detection">
+
+              <span
+                class="class-pill ${classNameFor(displayClass)}"
+              >
+
+                ${esc(displayClass)}
+
+              </span>
+
+
+              <span class="modality">
+
+                ${esc(modality)}
+
+              </span>
+
+            </div>
+
+
+            <div class="train-status">
+
+              ${esc(train.status || "Monitoring")}
+
+              ${
+                modality === "AUDIO"
+                ?
+                `
+                  ·
+                  ${Math.round(
+                    confidence * 100
+                  )}%
+                `
+                :
+                ""
+              }
+
+            </div>
+
+          </div>
+
+        `;
+
+      }
+    ).join("");
+
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+async function loadStats(){
+
+  try{
+
+    const data =
+      await api(
+        "/api/stats"
+      );
+
+    document.getElementById(
+      "total"
+    ).textContent =
+      data.total_detections || 0;
+
+    document.getElementById(
+      "active"
+    ).textContent =
+      data.active_tickets || 0;
+
+    document.getElementById(
+      "resolved"
+    ).textContent =
+      data.resolved_tickets || 0;
+
+
+    const tickets =
+      await api(
+        "/api/tickets"
+      );
+
+    const critical =
+      tickets.filter(
+        function(ticket){
+
+          return ticket.severity ===
+            "Critical";
+
+        }
+      ).length;
+
+    document.getElementById(
+      "criticalCount"
+    ).textContent =
+      critical;
+
+  }catch(error){
+
+    console.error(
+      "Stats error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   TICKETS
+========================================================= */
+
+document
+  .getElementById(
+    "trainSearch"
+  )
+  .addEventListener(
+    "input",
+    function(){
+
+      this.value =
+        this.value.replace(
+          /\D/g,
+          ""
+        );
+
+      loadTickets();
+
+    }
+  );
+
+
+async function loadTickets(){
+
+  try{
+
+    const train =
+      document
+        .getElementById(
+          "trainSearch"
+        )
+        .value
+        .trim();
+
+
+    let url =
+      "/api/tickets";
+
+    if(train){
+
+      url +=
+        "?train_number=" +
+        encodeURIComponent(
+          train
+        );
+
+    }
+
+
+    const tickets =
+      await api(url);
+
+
+    const body =
+      document.getElementById(
+        "ticketBody"
+      );
+
+
+    body.innerHTML =
+      "";
+
+
+    document.getElementById(
+      "ticketCount"
+    ).textContent =
+      tickets.length +
+      " active";
+
+
+    document.getElementById(
+      "emptyState"
+    ).style.display =
+      tickets.length
+      ? "none"
+      : "block";
+
+
+    tickets.forEach(
+      function(ticket){
+
+        const row =
+          document.createElement(
+            "tr"
+          );
+
+
+        row.onclick =
+          function(){
+
+            openTicket(
+              ticket.id
+            );
+
+          };
+
+
+        const source =
+          ticket.source ||
+          "AUDIO";
+
+
+        const confidence =
+          Number(
+            ticket.confidence || 0
+          );
+
+
+        row.innerHTML =
+          `
+
+            <td>
+
+              <span class="tid tnum">
+
+                RS-${String(
+                  ticket.id
+                ).padStart(
+                  5,
+                  "0"
+                )}
+
+              </span>
+
+            </td>
+
+
+            <td>
+
+              <strong>
+
+                ${esc(
+                  ticket.train_number
+                )}
+
+              </strong>
+
+            </td>
+
+
+            <td>
+
+              <span
+                class="source-pill ${sourceClass(source)}"
+              >
+
+                ${esc(source)}
+
+              </span>
+
+            </td>
+
+
+            <td>
+
+              ${esc(
+                ticket.defect_type
+              )}
+
+            </td>
+
+
+            <td>
+
+              ${Math.round(
+                confidence * 100
+              )}%
+
+            </td>
+
+
+            <td>
+
+              <span
+                class="class-pill ${classNameFor(ticket.severity)}"
+              >
+
+                ${esc(
+                  ticket.severity
+                )}
+
+              </span>
+
+            </td>
+
+
+            <td>
+
+              <button
+                class="resolve-btn"
+                onclick="
+                  event.stopPropagation();
+                  resolveFromTable(${ticket.id});
+                "
+              >
+
+                Resolve
+
+              </button>
+
+            </td>
+
+          `;
+
+
+        body.appendChild(
+          row
+        );
+
+      }
+    );
+
+
+  }catch(error){
+
+    console.error(
+      "Ticket error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   RESOLVE
+========================================================= */
+
+async function resolveFromTable(
+  id
+){
+
+  try{
+
+    await api(
+      `/api/tickets/${id}/resolve`,
+      {
+        method:"POST"
+      }
+    );
+
+    showToast(
+      "Ticket resolved."
+    );
+
+    await refreshDashboard();
+
+  }catch(error){
+
+    showToast(
+      "Could not resolve ticket."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   SYSTEM HEALTH
+========================================================= */
+
+async function loadHealth(){
+
+  try{
+
+    const data =
+      await api(
+        "/api/system-health"
+      );
+
+
+    const labels = {
+
+      audio_pipeline:
+        "Audio pipeline",
+
+      image_pipeline:
+        "Image pipeline",
+
+      detection_engine:
+        "Detection engine",
+
+      database:
+        "Database",
+
+      live_inspection:
+        "Live inspection"
+
+    };
+
+
+    const container =
+      document.getElementById(
+        "healthRows"
+      );
+
+
+    container.innerHTML =
+      Object.entries(data)
+        .map(
+          function([
+            key,
+            value
+          ]){
+
+            const lower =
+              String(
+                value
+              ).toLowerCase();
+
+
+            const isUp =
+              lower ===
+              "operational";
+
+
+            const isPending =
+              lower.includes(
+                "pending"
+              );
+
+
+            return `
+
+              <div class="health-row">
+
+                <span>
+
+                  ${esc(
+                    labels[key] ||
+                    key
+                  )}
+
+                </span>
+
+
+                <span
+                  class="
+                    health-status
+                    ${isUp ? "up" : ""}
+                    ${isPending ? "pending" : ""}
+                  "
+                >
+
+                  ${esc(value)}
+
+                </span>
+
+              </div>
+
+            `;
+
+          }
+        )
+        .join("");
+
+
+  }catch(error){
+
+    console.error(
+      "Health error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   HOTSPOTS
+========================================================= */
+
+async function loadHotspots(){
+
+  try{
+
+    const data =
+      await api(
+        "/api/hotspots"
+      );
+
+
+    const container =
+      document.getElementById(
+        "hotspotsList"
+      );
+
+
+    if(!data.length){
+
+      container.innerHTML =
+        `
+          <div class="empty-state">
+
+            <span>
+              No hotspot data yet.
+            </span>
+
+          </div>
+        `;
+
+      return;
+
+    }
+
+
+    const max =
+      Math.max(
+        ...data.map(
+          function(x){
+
+            return x.defect_count;
+
+          }
+        ),
+        1
+      );
+
+
+    container.innerHTML =
+      data
+        .slice(0,6)
+        .map(
+          function(item){
+
+            const width =
+              Math.max(
+                8,
+                (
+                  item.defect_count
+                  /
+                  max
+                ) * 100
+              );
+
+
+            return `
+
+              <div class="hotspot">
+
+                <div class="hotspot-top">
+
+                  <span>
+
+                    ${esc(
+                      item.location_name
+                    )}
+
+                  </span>
+
+
+                  <span class="hotspot-count">
+
+                    ${item.defect_count}
+
+                  </span>
+
+                </div>
+
+
+                <div class="bar-track">
+
+                  <div
+                    class="bar-fill"
+                    style="
+                      width:${width}%;
+                    "
+                  ></div>
+
+                </div>
+
+
+                <div class="hotspot-meta">
+
+                  ${item.recent_count || 0}
+                  recent detections
+
+                </div>
+
+              </div>
+
+            `;
+
+          }
+        )
+        .join("");
+
+  }catch(error){
+
+    console.error(
+      "Hotspot error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   SIMULATION UI
+========================================================= */
+
+function updateSimulationUI(){
+
+  const button =
+    document.getElementById(
+      "simButton"
+    );
+
+
+  const pill =
+    document.getElementById(
+      "statusPill"
+    );
+
+
+  if(simulationRunning){
+
+    button.textContent =
+      "Stop Live Inspection";
+
+    button.classList.remove(
+      "btn-solid"
+    );
+
+    button.classList.add(
+      "btn-danger"
+    );
+
+
+    pill.classList.add(
+      "live"
+    );
+
+
+    pill.innerHTML =
+      `
+        <span class="status-dot"></span>
+        Detection live
+      `;
+
+  }else{
+
+    button.textContent =
+      "Start Live Inspection";
+
+    button.classList.remove(
+      "btn-danger"
+    );
+
+    button.classList.add(
+      "btn-solid"
+    );
+
+
+    pill.classList.remove(
+      "live"
+    );
+
+
+    pill.innerHTML =
+      `
+        <span class="status-dot"></span>
+        Detection idle
+      `;
+
+  }
+
+}
+
+
+/* =========================================================
+   START / STOP
+========================================================= */
+
+async function toggleSimulation(){
+
+  try{
+
+    if(!simulationRunning){
+
+      await api(
+        "/api/simulation/start",
+        {
+          method:"POST"
+        }
+      );
+
+      simulationRunning =
+        true;
+
+      updateSimulationUI();
+
+      showToast(
+        "Live AI inspection started across the 8 RailSense Express trains."
+      );
+
+      runSimulationRefresh();
+
+    }else{
+
+      await api(
+        "/api/simulation/stop",
+        {
+          method:"POST"
+        }
+      );
+
+      simulationRunning =
+        false;
+
+      clearTimeout(
+        simulationTimer
+      );
+
+      updateSimulationUI();
+
+      showToast(
+        "Live inspection stopped."
+      );
+
+    }
+
+  }catch(error){
+
+    console.error(
+      error
+    );
+
+    showToast(
+      error.message ||
+      "Could not change inspection state."
+    );
+
+  }
+
+}
+
+
+/*
+   The backend itself continuously runs the inspection.
+
+   The browser only refreshes the dashboard.
+*/
+
+async function runSimulationRefresh(){
+
+  if(!simulationRunning){
+    return;
+  }
+
+
+  await refreshDashboard();
+
+
+  simulationTimer =
+    setTimeout(
+      runSimulationRefresh,
+      2500
+    );
+
+}
+
+
+/* =========================================================
+   OPEN TICKET
+========================================================= */
+
+async function openTicket(
+  id
+){
+
+  try{
+
+    currentTicket =
+      await api(
+        `/api/tickets/${id}`
+      );
+
+
+    const ticket =
+      currentTicket;
+
+
+    document.getElementById(
+      "modalTitle"
+    ).textContent =
+      `RS-${String(
+        ticket.id
+      ).padStart(
+        5,
+        "0"
+      )} · ${ticket.defect_type}`;
+
+
+    document.getElementById(
+      "modalSubtitle"
+    ).textContent =
+      `Train ${ticket.train_number} · ${ticket.source} · ${ticket.location_name}`;
+
+
+    const route =
+      buildRouteCard(
+        ticket
+      );
+
+
+    let evidence = "";
+
+
+    /* =====================================================
+       AUDIO EVIDENCE
+    ===================================================== */
+
+    if(
+      ticket.source ===
+      "AUDIO"
+    ){
+
+      const filename =
+        ticket.evidence_file;
+
+
+      evidence =
+        `
+
+          <div class="evidence-card">
+
+            <div class="evidence-label">
+
+              Audio Waveform
+
+            </div>
+
+
+            <div
+              id="waveformBox"
+              class="spectrogram-box"
+            >
+
+              <div class="spectrogram-loading">
+
+                Loading audio waveform...
+
+              </div>
+
+            </div>
+
+
+            <div class="spectrogram-caption">
+
+              Generated from the same WAV evidence used
+              for the audio inspection, after Butterworth
+              bandpass filtering.
+
+            </div>
+
+          </div>
+
+
+          <div
+            class="evidence-card"
+            style="margin-top:14px;"
+          >
+
+            <div class="evidence-label">
+
+              MFCC Visualization
+
+            </div>
+
+
+            <div
+              id="mfccBox"
+              class="spectrogram-box"
+            >
+
+              <div class="spectrogram-loading">
+
+                Generating MFCC visualization...
+
+              </div>
+
+            </div>
+
+
+            <div class="spectrogram-caption">
+
+              40 MFCC coefficients used as the SVM's input
+              features, averaged over time for prediction.
+
+            </div>
+
+          </div>
+
+        `;
+
+    }
+
+
+    /* =====================================================
+       IMAGE EVIDENCE
+    ===================================================== */
+
+    else{
+
+      evidence =
+        `
+          <div class="evidence-card">
+            <div class="evidence-label">Original inspection image</div>
+            <div id="imageEvidenceBox" class="image-evidence-box">
+              <div class="spectrogram-loading">Loading inspection image...</div>
+            </div>
+          </div>
+
+          <div class="evidence-card" style="margin-top:14px;">
+            <div class="evidence-label">Grad-CAM · model attention region</div>
+            <div id="gradcamBox" class="image-evidence-box">
+              <div class="spectrogram-loading">Loading Grad-CAM...</div>
+            </div>
+            <div class="spectrogram-caption">
+              Grad-CAM generated from the real ResNet50 model inference for the predicted defect class.
+            </div>
+          </div>
+        `;
+
+    }
+
+
+    /* =====================================================
+       INFO
+    ===================================================== */
+
+    const confidence =
+      Number(
+        ticket.confidence || 0
+      );
+
+
+    const severity =
+      ticket.severity;
+
+
+    const critical =
+      severity ===
+      "Critical";
+
+    const processingSteps = ticket.source === "AUDIO"
+      ? ["Input received", "Butterworth filtering", "MFCC extraction", "SVM inference", "Ticket generated"]
+      : ["Input received", "Image preprocessing", "ResNet50 feature extraction", "Model inference", "Ticket generated"];
+
+
+    document.getElementById(
+      "modalBody"
+    ).innerHTML =
+
+      route +
+
+      `
+
+        <div class="detail-grid">
+
+          <div>
+
+            ${evidence}
+
+          </div>
+
+
+          <div>
+
+            <div class="info-card">
+
+              <div class="info-row">
+
+                <span>
+                  Predicted defect
+                </span>
+
+                <b>
+                  ${esc(
+                    ticket.defect_type
+                  )}
+                </b>
+
+              </div>
+
+
+              <div class="info-row">
+
+                <span>
+                  RailSense class
+                </span>
+
+                <span
+                  class="class-pill ${classNameFor(severity)}"
+                >
+
+                  ${esc(severity)}
+
+                </span>
+
+              </div>
+
+
+              <div class="info-row">
+
+                <span>
+                  Confidence
+                </span>
+
+                <b>
+                  ${Math.round(
+                    confidence * 100
+                  )}%
+                </b>
+
+              </div>
+
+
+              <div class="info-row">
+
+                <span>
+                  Train
+                </span>
+
+                <b>
+                  ${esc(
+                    ticket.train_number
+                  )}
+                </b>
+
+              </div>
+
+
+              <div class="info-row">
+
+                <span>
+                  Source
+                </span>
+
+                <b>
+                  ${esc(
+                    ticket.source
+                  )}
+                </b>
+
+              </div>
+
+
+              <div class="info-row">
+
+                <span>
+                  Location
+                </span>
+
+                <b>
+                  ${esc(
+                    ticket.location_name
+                  )}
+                </b>
+
+              </div>
+
+
+              <div class="info-row">
+
+                <span>
+                  Latitude
+                </span>
+
+                <b>
+                  ${Number(
+                    ticket.latitude
+                  ).toFixed(6)}
+                </b>
+
+              </div>
+
+
+              <div class="info-row">
+
+                <span>
+                  Longitude
+                </span>
+
+                <b>
+                  ${Number(
+                    ticket.longitude
+                  ).toFixed(6)}
+                </b>
+
+              </div>
+
+            </div>
+
+
+            ${
+              critical
+              ?
+              `
+
+                <div
+                  class="critical-actions show"
+                >
+
+                  <div class="critical-title">
+
+                    Critical safety response
+
+                  </div>
+
+
+                  <div class="critical-text">
+
+                    This defect requires operational
+                    escalation. Choose a maintenance date before notifying
+                    passengers. The notification is sent through Twilio.
+
+                  </div>
+
+
+                  <div class="critical-buttons">
+
+                    <button
+                      class="btn btn-red"
+                      onclick="
+                        openMaintenanceModal(
+                          ${ticket.id}
+                        )
+                      "
+                    >
+
+                      Inform Passengers
+
+                    </button>
+
+
+                    <button
+                      class="btn btn-blue"
+                      onclick="
+                        informRoutingOfficer(
+                          ${ticket.id}
+                        )
+                      "
+                    >
+
+                      Inform Routing Officer
+
+                    </button>
+
+                  </div>
+
+
+                  <div
+                    id="actionMessage"
+                    class="action-message"
+                  ></div>
+
+                </div>
+
+              `
+              :
+              ""
+            }
+
+          </div>
+
+        </div>
+
+
+        <div class="timeline">
+
+          <div class="timeline-title">
+
+            Detection processing
+
+          </div>
+
+
+          <div class="steps">
+
+            <div class="step">
+
+              <span class="step-number">
+                01
+              </span>
+
+              <span class="step-name">
+                Input received
+              </span>
+
+            </div>
+
+
+            <div class="step">
+
+              <span class="step-number">
+                02
+              </span>
+
+              <span class="step-name">
+                Butterworth filtering
+              </span>
+
+            </div>
+
+
+            <div class="step">
+
+              <span class="step-number">
+                03
+              </span>
+
+              <span class="step-name">
+                MFCC extraction
+              </span>
+
+            </div>
+
+
+            <div class="step">
+
+              <span class="step-number">
+                04
+              </span>
+
+              <span class="step-name">
+                SVM inference
+              </span>
+
+            </div>
+
+
+            <div class="step">
+
+              <span class="step-number">
+                05
+              </span>
+
+              <span class="step-name">
+                Ticket generated
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      `;
+
+
+    document.getElementById(
+      "resolveButton"
+    ).onclick =
+      function(){
+
+        resolveTicket();
+
+      };
+
+
+    document.getElementById(
+      "overlay"
+    ).classList.add(
+      "show"
+    );
+
+
+    /* =====================================================
+       LOAD ACTUAL SPECTROGRAM
+    ===================================================== */
+
+    if(
+      ticket.source ===
+      "AUDIO"
+      &&
+      ticket.evidence_file
+    ){
+
+      loadTicketAudioVisuals(
+        ticket.evidence_file
+      );
+
+    }else if(
+      ticket.source === "IMAGE"
+      && ticket.evidence_file
+    ){
+
+      loadTicketImageVisuals(
+        ticket.evidence_file,
+        ticket.gradcam_file
+      );
+
+    }
+
+  }catch(error){
+
+    console.error(
+      error
+    );
+
+    showToast(
+      "Unable to load ticket."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   LOAD AUDIO WAVEFORM + MFCC VISUALS
+========================================================= */
+
+async function renderAudioVisual(
+  containerId,
+  endpoint,
+  blob,
+  filename,
+  altText,
+  failureText
+){
+
+  const container =
+    document.getElementById(
+      containerId
+    );
+
+
+  if(!container){
+    return;
+  }
+
+
+  try{
+
+    const formData =
+      new FormData();
+
+    formData.append(
+      "audio",
+      blob,
+      filename
+    );
+
+
+    const response =
+      await fetch(
+        endpoint,
+        {
+          method:"POST",
+          body:formData
+        }
+      );
+
+
+    if(!response.ok){
+
+      throw new Error(
+        altText +
+        " generation failed."
+      );
+
+    }
+
+
+    const imageBlob =
+      await response.blob();
+
+
+    const imageURL =
+      URL.createObjectURL(
+        imageBlob
+      );
+
+
+    container.innerHTML =
+      `
+
+        <img
+          src="${imageURL}"
+          alt="${altText}"
+        >
+
+      `;
+
+  }catch(error){
+
+    console.error(
+      error
+    );
+
+    container.innerHTML =
+      `
+
+        <div
+          style="
+            color:#ff8a80;
+            text-align:center;
+            font-size:11px;
+          "
+        >
+
+          ${esc(failureText)}
+
+          <br><br>
+
+          ${esc(error.message)}
+
+        </div>
+
+      `;
+
+  }
+
+}
+
+
+async function loadTicketAudioVisuals(
+  filename
+){
+
+  try{
+
+    const response =
+      await fetch(
+        "/api/audio/evidence/" +
+        encodeURIComponent(
+          filename
+        )
+      );
+
+
+    if(!response.ok){
+
+      throw new Error(
+        "Audio evidence unavailable."
+      );
+
+    }
+
+
+    const blob =
+      await response.blob();
+
+
+    renderAudioVisual(
+      "waveformBox",
+      "/api/ai/audio/waveform",
+      blob,
+      filename,
+      "Audio Waveform",
+      "Could not generate the audio waveform."
+    );
+
+    renderAudioVisual(
+      "mfccBox",
+      "/api/ai/audio/mfcc",
+      blob,
+      filename,
+      "MFCC Visualization",
+      "Could not generate the MFCC visualization."
+    );
+
+  }catch(error){
+
+    console.error(
+      error
+    );
+
+    const waveformBox =
+      document.getElementById(
+        "waveformBox"
+      );
+
+    const mfccBox =
+      document.getElementById(
+        "mfccBox"
+      );
+
+    const message =
+      `
+
+        <div
+          style="
+            color:#ff8a80;
+            text-align:center;
+            font-size:11px;
+          "
+        >
+
+          Could not load the audio evidence.
+
+          <br><br>
+
+          ${esc(error.message)}
+
+        </div>
+
+      `;
+
+    if(waveformBox){
+      waveformBox.innerHTML = message;
+    }
+
+    if(mfccBox){
+      mfccBox.innerHTML = message;
+    }
+
+  }
+
+}
+
+
+async function loadTicketImageVisuals(
+  filename,
+  gradcamFilename
+){
+  const imageBox = document.getElementById("imageEvidenceBox");
+  const gradcamBox = document.getElementById("gradcamBox");
+
+  try{
+    if(imageBox){
+      imageBox.innerHTML = `
+        <img src="/api/image/evidence/${encodeURIComponent(filename)}"
+             alt="Original railway inspection image">
+      `;
+    }
+
+    if(gradcamBox && gradcamFilename){
+      gradcamBox.innerHTML = `
+        <img src="/api/image/gradcam/${encodeURIComponent(gradcamFilename)}"
+             alt="Grad-CAM model attention visualization">
+      `;
+    }else if(gradcamBox){
+      gradcamBox.innerHTML = `
+        <div style="color:#ffbf5c;text-align:center;font-size:11px;">
+          Grad-CAM evidence unavailable for this ticket.
+        </div>
+      `;
+    }
+  }catch(error){
+    console.error("Could not load image evidence:", error);
+
+    if(imageBox){
+      imageBox.innerHTML = `<div style="color:#ff8a80;text-align:center;font-size:11px;">Could not load inspection image.</div>`;
+    }
+    if(gradcamBox){
+      gradcamBox.innerHTML = `<div style="color:#ff8a80;text-align:center;font-size:11px;">Could not load Grad-CAM.</div>`;
+    }
+  }
+}
+
+
+/* =========================================================
+   ROUTE CARD
+========================================================= */
+
+function buildRouteCard(
+  ticket
+){
+
+  const stops =
+    ticket.route || [];
+
+
+  if(
+    stops.length < 2
+  ){
+
+    return "";
+
+  }
+
+
+  const n =
+    stops.length - 1;
+
+
+  const stopMarkup =
+    stops.map(
+      function(
+        stop,
+        index
+      ){
+
+        const pct =
+          (
+            index /
+            n
+          ) * 100;
+
+
+        const boundary =
+          stop.name ===
+          ticket.from_station
+          ||
+          stop.name ===
+          ticket.to_station;
+
+
+        return `
+
+          <div
+            class="
+              route-stop
+              ${boundary ? "boundary" : ""}
+            "
+            style="
+              left:${pct}%;
+            "
+          >
+
+            <div class="route-stop-label">
+
+              ${esc(
+                stop.name
+              )}
+
+            </div>
+
+          </div>
+
+        `;
+
+      }
+    ).join("");
+
+
+  const defectPct =
+    Number(
+      ticket.position_fraction || 0
+    ) * 100;
+
+
+  const severityClass =
+    ticket.severity ===
+    "Critical"
+    ?
+    "critical"
+    :
+    ticket.severity ===
+    "Abnormal"
+    ?
+    "abnormal"
+    :
+    "";
+
+
+  return `
+
+    <div class="route-card">
+
+      <div class="route-label">
+
+        Current train path ·
+
+        <b>
+
+          ${esc(
+            ticket.corridor_name
+          )}
+
+        </b>
+
+      </div>
+
+
+      <div class="route-track">
+
+        ${stopMarkup}
+
+
+        ${
+          severityClass
+          ?
+          `
+
+            <div
+              class="
+                route-defect
+                ${severityClass}
+              "
+              style="
+                left:${defectPct}%;
+              "
+              title="${esc(ticket.defect_type)}"
+            ></div>
+
+            <div
+              class="route-coords"
+              style="
+                left:${defectPct}%;
+              "
+            >
+
+              ${Number(
+                ticket.latitude
+              ).toFixed(5)},
+
+              ${Number(
+                ticket.longitude
+              ).toFixed(5)}
+
+            </div>
+
+          `
+          :
+          ""
+        }
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================================================
+   INFORM PASSENGERS
+   Engineer selects a maintenance date before the SMS is sent.
+========================================================= */
+
+let maintenanceTicketId = null;
+
+function openMaintenanceModal(id){
+  maintenanceTicketId = id;
+
+  const modal = document.getElementById("maintenanceModal");
+  const dateInput = document.getElementById("maintenanceDate");
+
+  if(dateInput){
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const dd = String(today.getDate()).padStart(2, "0");
+    const todayString = `${yyyy}-${mm}-${dd}`;
+
+    dateInput.min = todayString;
+    dateInput.value = "";
+  }
+
+  if(modal){
+    modal.classList.add("show");
+    setTimeout(() => dateInput?.focus(), 50);
+  }
+}
+
+function closeMaintenanceModal(){
+  const modal = document.getElementById("maintenanceModal");
+  if(modal) modal.classList.remove("show");
+  maintenanceTicketId = null;
+}
+
+async function sendPassengerMaintenanceNotice(){
+  const dateInput = document.getElementById("maintenanceDate");
+  const sendButton = document.getElementById("sendMaintenanceBtn");
+
+  if(!maintenanceTicketId || !dateInput || !dateInput.value){
+    showToast("Please select a maintenance date.");
+    return;
+  }
+
+  try{
+    if(sendButton){
+      sendButton.disabled = true;
+      sendButton.textContent = "Sending...";
+    }
+
+    const data = await api(
+      `/api/tickets/${maintenanceTicketId}/inform-passengers`,
+      {
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+          maintenance_date: dateInput.value
+        })
+      }
+    );
+
+    const message = document.getElementById("actionMessage");
+
+    if(message){
+      message.textContent = data.message;
+    }
+
+    showToast(data.message);
+    closeMaintenanceModal();
+
+  }catch(error){
+    showToast(error.message);
+  }finally{
+    if(sendButton){
+      sendButton.disabled = false;
+      sendButton.textContent = "Send";
+    }
+  }
+}
+
+
+/* =========================================================
+   INFORM ROUTING OFFICER
+========================================================= */
+
+async function informRoutingOfficer(
+  id
+){
+
+  try{
+
+    const data =
+      await api(
+        `/api/tickets/${id}/inform-routing-officer`,
+        {
+          method:"POST"
+        }
+      );
+
+
+    const message =
+      document.getElementById(
+        "actionMessage"
+      );
+
+
+    if(message){
+
+      message.textContent =
+        data.message;
+
+    }
+
+
+    showToast(
+      data.message
+    );
+
+
+  }catch(error){
+
+    showToast(
+      error.message
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   RESOLVE FROM MODAL
+========================================================= */
+
+async function resolveTicket(){
+
+  if(!currentTicket){
+    return;
+  }
+
+
+  await resolveFromTable(
+    currentTicket.id
+  );
+
+
+  closeModal();
+
+}
+
+
+/* =========================================================
+   CLOSE MODAL
+========================================================= */
+
+function closeModal(){
+
+  document.getElementById(
+    "overlay"
+  ).classList.remove(
+    "show"
+  );
+
+  currentTicket =
+    null;
+
+}
+
+
+document
+  .getElementById(
+    "overlay"
+  )
+  .addEventListener(
+    "click",
+    function(event){
+
+      if(
+        event.target ===
+        this
+      ){
+
+        closeModal();
+
+      }
+
+    }
+  );
+
+
+document.addEventListener(
+  "keydown",
+  function(event){
+
+    if(
+      event.key ===
+      "Escape"
+    ){
+
+      closeModal();
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   REFRESH
+========================================================= */
+
+async function refreshDashboard(){
+
+  await Promise.all([
+
+    loadStats(),
+
+    loadTickets(),
+
+    loadHealth(),
+
+    loadHotspots(),
+
+    loadTrains()
+
+  ]);
+
+}
+
+
+/* =========================================================
+   INITIAL LOAD
+========================================================= */
+
+refreshDashboard();
+
+
+/*
+   Keep dashboard updated even when
+   live inspection isn't running.
+*/
+
+setInterval(
+  refreshDashboard,
+  5000
+);
+
+</script>
+
+
+
+<div
+  id="maintenanceModal"
+  class="maintenance-modal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="maintenanceModalTitle"
+  onclick="if(event.target === this) closeMaintenanceModal()"
+>
+  <div class="maintenance-modal-card">
+    <h3 id="maintenanceModalTitle">Schedule maintenance</h3>
+    <p>
+      Select the scheduled maintenance date. Clicking Send will send the
+      passenger SMS with the defect location, train and maintenance date.
+    </p>
+
+    <label
+      for="maintenanceDate"
+      style="display:block;font-size:12px;color:var(--text-secondary);margin-bottom:7px;"
+    >
+      Maintenance date
+    </label>
+
+    <input
+      id="maintenanceDate"
+      class="maintenance-date-input"
+      type="date"
+    >
+
+    <div class="maintenance-modal-actions">
+      <button
+        type="button"
+        class="btn btn-ghost"
+        onclick="closeMaintenanceModal()"
+      >
+        Cancel
+      </button>
+
+      <button
+        type="button"
+        id="sendMaintenanceBtn"
+        class="btn btn-red"
+        onclick="sendPassengerMaintenanceNotice()"
+      >
+        Send
+      </button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

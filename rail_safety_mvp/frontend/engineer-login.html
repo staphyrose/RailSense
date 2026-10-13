@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RailSense - Engineer Access</title>
+
+```
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: Arial, sans-serif;
+        background: #0b1220;
+        color: white;
+    }
+
+    .card {
+        width: 400px;
+        max-width: 90%;
+        padding: 40px;
+        border-radius: 20px;
+        background: #111c2e;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        text-align: center;
+    }
+
+    .logo {
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .subtitle {
+        color: #9caec7;
+        margin-bottom: 30px;
+    }
+
+    input {
+        width: 100%;
+        padding: 14px;
+        border-radius: 10px;
+        border: 1px solid #334155;
+        background: #0f172a;
+        color: white;
+        font-size: 18px;
+        text-align: center;
+        outline: none;
+    }
+
+    input:focus {
+        border-color: #2563eb;
+    }
+
+    button {
+        width: 100%;
+        margin-top: 18px;
+        padding: 14px;
+        border: none;
+        border-radius: 10px;
+        background: #2563eb;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #1d4ed8;
+    }
+
+    button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    #message {
+        margin-top: 18px;
+        min-height: 22px;
+        font-size: 14px;
+    }
+
+    .back {
+        display: inline-block;
+        margin-top: 25px;
+        color: #94a3b8;
+        text-decoration: none;
+    }
+
+    .back:hover {
+        color: white;
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+```
+<div class="card">
+
+    <div class="logo">RAILSENSE</div>
+
+    <div class="subtitle">
+        Engineer Access
+    </div>
+
+    <p style="margin-bottom: 15px;">
+        Enter the engineer secret code to continue.
+    </p>
+
+    <input
+        type="password"
+        id="secretCode"
+        placeholder="Enter secret code"
+        autocomplete="off"
+    >
+
+    <button id="accessButton" onclick="verifyEngineer()">
+        Access Engineer Dashboard
+    </button>
+
+    <div id="message"></div>
+
+    <a
+        class="back"
+        href="http://127.0.0.1:5000/"
+    >
+        ← Back to RailSense
+    </a>
+
+</div>
+
+
+<script>
+
+    async function verifyEngineer() {
+
+        const codeInput = document.getElementById("secretCode");
+        const message = document.getElementById("message");
+        const button = document.getElementById("accessButton");
+
+        const code = codeInput.value.trim();
+
+        // ---------------------------------------------
+        // CHECK EMPTY CODE
+        // ---------------------------------------------
+
+        if (!code) {
+
+            message.textContent =
+                "Please enter the secret code.";
+
+            message.style.color = "#f59e0b";
+
+            return;
+        }
+
+
+        // ---------------------------------------------
+        // DISABLE BUTTON WHILE VERIFYING
+        // ---------------------------------------------
+
+        button.disabled = true;
+        button.textContent = "Verifying...";
+
+        message.textContent =
+            "Checking engineer access...";
+
+        message.style.color = "#94a3b8";
+
+
+        // ---------------------------------------------
+        // SEND CODE TO FLASK
+        // ---------------------------------------------
+
+        try {
+
+            const response = await fetch(
+                "http://127.0.0.1:5000/api/engineer/verify",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        code: code
+                    })
+                }
+            );
+
+
+            // -----------------------------------------
+            // READ SERVER RESPONSE
+            // -----------------------------------------
+
+            const result = await response.json();
+
+            console.log(
+                "Engineer verification response:",
+                result
+            );
+
+
+            // -----------------------------------------
+            // CORRECT CODE
+            // -----------------------------------------
+
+            if (response.ok && result.ok) {
+
+                message.textContent =
+                    "Access granted. Opening dashboard...";
+
+                message.style.color = "#22c55e";
+
+
+                // -------------------------------------
+                // OPEN FLASK ENGINEER DASHBOARD
+                // -------------------------------------
+
+                setTimeout(function () {
+
+                    window.location.href =
+                        "http://127.0.0.1:5000/engineer";
+
+                }, 500);
+
+            }
+
+
+            // -----------------------------------------
+            // WRONG CODE
+            // -----------------------------------------
+
+            else {
+
+                message.textContent =
+                    result.message ||
+                    "Invalid secret code.";
+
+                message.style.color = "#ef4444";
+
+                button.disabled = false;
+
+                button.textContent =
+                    "Access Engineer Dashboard";
+            }
+
+        }
+
+
+        // ---------------------------------------------
+        // SERVER CONNECTION ERROR
+        // ---------------------------------------------
+
+        catch (error) {
+
+            console.error(
+                "Engineer verification error:",
+                error
+            );
+
+            message.textContent =
+                "Unable to connect to the RailSense server.";
+
+            message.style.color = "#ef4444";
+
+            button.disabled = false;
+
+            button.textContent =
+                "Access Engineer Dashboard";
+        }
+    }
+
+
+    // ---------------------------------------------
+    // ENTER KEY SUPPORT
+    // ---------------------------------------------
+
+    document
+        .getElementById("secretCode")
+        .addEventListener(
+            "keydown",
+            function (event) {
+
+                if (event.key === "Enter") {
+
+                    verifyEngineer();
+
+                }
+
+            }
+        );
+
+</script>
+```
+
+</body>
+</html>

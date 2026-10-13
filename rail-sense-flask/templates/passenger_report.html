@@ -1,0 +1,163 @@
+{% extends "passenger_base.html" %}
+{% block title %}Report Issue{% endblock %}
+
+{% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@500;700;800&family=Anton&display=swap" rel="stylesheet">
+<style id="railsense-cinematic-theme">
+.dash-rp{
+  --pearl:#FBF3EC;--lavender-soft:#F6EBE3;--lavender-mist:#E6D2C4;
+  --periwinkle:#B20808;--electric:#B8A597;--violet:#8B0909;--plum:#2E1512;--muted:#5A4234;
+  --green:#1d8a62;--amber:#C27A12;--red:#B20808;
+  --line:rgba(74,54,44,.18);--shadow:0 24px 60px rgba(46,21,18,.22);
+  font-family:"Inter",system-ui,sans-serif;color:var(--plum);
+  max-width:700px;margin:0 auto;padding:20px 16px 48px;
+}
+body{
+  background:
+    radial-gradient(circle at 85% 8%,rgba(178,8,8,.16),transparent 32%),
+    radial-gradient(circle at 8% 92%,rgba(128,99,80,.45),transparent 40%),
+    linear-gradient(165deg,#F6EBE3 0%,#EDD9CC 30%,#B8A597 68%,#806350 100%) fixed !important;
+}
+.dash-rp [hidden]{display:none !important}
+
+/* header — photo card */
+.dash-rp .rp-head{
+  position:relative;padding:40px 8px 28px;margin-bottom:18px;border-radius:0;color:var(--plum);
+  box-shadow:none;background:none;
+  animation:rp-in .9s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes rp-in{from{opacity:0;transform:translateY(30px) scale(.97)}to{opacity:1;transform:none}}
+.dash-rp .rp-head h1{margin:0;font-family:"Anton","Bebas Neue",Impact,sans-serif;font-weight:400;text-transform:uppercase;font-size:clamp(54px,9vw,104px);line-height:.95;letter-spacing:.01em;color:var(--plum)}
+.dash-rp .rp-sub{margin:14px 0 0;max-width:480px;font-size:15px;line-height:1.7;color:var(--muted)}
+.dash-rp .rp-urgent{
+  margin:24px 0 0;padding:12px 16px;border-radius:16px;font-size:13px;line-height:1.6;color:var(--plum);
+  background:rgba(255,255,255,.55);border:1px solid #B8A597;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+}
+.dash-rp .rp-urgent a{color:var(--violet);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.dash-rp .rp-urgent a:hover{color:var(--red)}
+
+/* panels */
+.dash-rp .panel{
+  margin-bottom:18px;border-radius:32px;background:linear-gradient(160deg,#FBF3EC 0%,#F6EBE3 45%,#E6D2C4 100%);border:1px solid #B8A597;
+  box-shadow:0 18px 50px rgba(46,21,18,.16);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  animation:rp-in .9s .1s cubic-bezier(.2,.8,.2,1) both;
+}
+.dash-rp .rp-form{display:flex;flex-direction:column;gap:20px;padding:32px 34px 34px}
+.dash-rp .rp-field{display:flex;flex-direction:column;gap:8px}
+.dash-rp .rp-field label{font:600 13px "Manrope",sans-serif;letter-spacing:-.01em;color:var(--plum)}
+.dash-rp .rp-opt{font-weight:400;color:var(--muted)}
+.dash-rp .rp-field select,.dash-rp .rp-field textarea{
+  width:100%;padding:14px 16px;border-radius:15px;border:1.5px solid #806350;background:#D9C2B2;color:#2E1512;box-shadow:0 4px 12px rgba(46,21,18,.12);
+  font:400 14px/1.5 "Inter",sans-serif;outline:none;transition:border-color .25s,box-shadow .25s;
+}
+.dash-rp .rp-field textarea{resize:vertical;min-height:110px;border-radius:18px}
+.dash-rp .rp-field select:focus,.dash-rp .rp-field textarea:focus{border-color:#8B0909;box-shadow:0 0 0 5px rgba(139,9,9,.2)}
+.dash-rp .rp-field select option{background:#F6EBE3;color:#2E1512}
+.dash-rp .rp-field [aria-invalid="true"]{border-color:rgba(178,8,8,.6)}
+.dash-rp .rp-hint{margin:0;font-size:12px;line-height:1.6;color:var(--muted)}
+.dash-rp .rp-err{margin:0;font-size:12.5px;font-weight:500;line-height:1.5;color:#B20808}
+.dash-rp .rp-err:empty{display:none}
+.dash-rp .rp-err-form:not(:empty){padding:12px 16px;border-radius:14px;background:rgba(178,8,8,.10)}
+
+/* buttons */
+.dash-rp .btn-primary{
+  display:inline-flex;align-items:center;justify-content:center;padding:16px 22px;border:none;border-radius:15px;
+  background:var(--violet);color:#fff;font:600 13px "Inter",sans-serif;text-decoration:none;cursor:pointer;
+  transition:transform .25s,box-shadow .25s,opacity .25s;
+}
+.dash-rp .btn-primary:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 24px rgba(139,9,9,.28)}
+.dash-rp .btn-primary:disabled{opacity:.55;cursor:not-allowed}
+.dash-rp .rp-submit{width:100%}
+
+/* done */
+.dash-rp .rp-done{padding:34px;border-left:5px solid var(--green)}
+.dash-rp .rp-done h2{margin:0 0 12px;font:600 26px "Manrope",sans-serif;letter-spacing:-.04em;color:var(--plum)}
+.dash-rp .rp-done p{margin:0 0 10px;font-size:14.5px;line-height:1.7;color:var(--muted)}
+.dash-rp .rp-code{display:inline-block;padding:3px 12px;border-radius:10px;background:var(--lavender-mist);color:var(--violet);font-family:"Manrope",sans-serif;letter-spacing:.02em}
+.dash-rp .rp-done-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:22px !important}
+.dash-rp .rp-again{
+  padding:15px 18px;border-radius:15px;border:1px solid #B8A597;background:rgba(255,255,255,.6);color:var(--violet);
+  font:600 13px "Inter",sans-serif;cursor:pointer;transition:background .25s,transform .25s;
+}
+.dash-rp .rp-again:hover{background:var(--lavender-soft);transform:translateY(-2px)}
+
+.dash-rp .al-disclaimer{margin:18px 6px 0;font-size:12px;line-height:1.7;color:var(--muted)}
+.dash-rp a:focus-visible,.dash-rp button:focus-visible,.dash-rp select:focus-visible,.dash-rp textarea:focus-visible{outline:2px solid var(--violet);outline-offset:3px}
+
+@media(max-width:600px){
+  .dash-rp{padding:12px 10px 32px}
+  .dash-rp .rp-head{padding:30px 6px 22px;border-radius:0}
+  .dash-rp .panel{border-radius:24px}
+  .dash-rp .rp-form{padding:24px 20px 26px}
+  .dash-rp .rp-done{padding:26px 22px}
+  .dash-rp .rp-done-actions > *{width:100%}
+}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms !important;transition-duration:.01ms !important}}
+</style>
+
+<div class="dash dash-narrow dash-rp">
+
+  <section class="rp-head" aria-labelledby="rp-title">
+    <h1 id="rp-title">Report Issue</h1>
+    <p class="rp-sub">Tell the railway engineers about something unusual you notice during your journey.</p>
+    <p class="rp-urgent">If anyone is in danger or hurt, do not use this form. Go to <a href="/passenger/emergency">Emergency Help</a>.</p>
+  </section>
+
+  <script type="application/json" id="rp-options">{{ options|tojson }}</script>
+
+  <form class="panel rp-form" id="rp-form" novalidate>
+    <div class="rp-field">
+      <label for="rp-train">Your train</label>
+      <select id="rp-train" name="train" required aria-describedby="rp-err-train"></select>
+      <p class="rp-err" id="rp-err-train" role="alert"></p>
+    </div>
+
+    <div class="rp-field">
+      <label for="rp-location">Where on the route</label>
+      <select id="rp-location" name="location" required aria-describedby="rp-err-location rp-hint-location"></select>
+      <p class="rp-hint" id="rp-hint-location">A station, or the stretch between two stations.</p>
+      <p class="rp-err" id="rp-err-location" role="alert"></p>
+    </div>
+
+    <div class="rp-field">
+      <label for="rp-issue">What did you notice</label>
+      <select id="rp-issue" name="issue_type" required aria-describedby="rp-err-issue_type"></select>
+      <p class="rp-err" id="rp-err-issue_type" role="alert"></p>
+    </div>
+
+    <div class="rp-field">
+      <label for="rp-desc">More details <span class="rp-opt">(optional)</span></label>
+      <textarea id="rp-desc" name="description" rows="4" aria-describedby="rp-count rp-err-description"></textarea>
+      <p class="rp-hint" id="rp-count"></p>
+      <p class="rp-err" id="rp-err-description" role="alert"></p>
+    </div>
+
+    <p class="rp-err rp-err-form" id="rp-err-form" role="alert"></p>
+
+    <button type="submit" class="btn-primary rp-submit" id="rp-submit">Send report</button>
+  </form>
+
+  <section class="panel rp-done" id="rp-done" role="status" aria-live="polite" hidden>
+    <h2>Report sent</h2>
+    <p>Your reference number is <strong class="rp-code" id="rp-code"></strong>.</p>
+    <p>The railway engineers can now see it. You can follow its progress in My Reports.</p>
+    <p class="rp-done-actions">
+      <a class="btn-primary rp-link" href="/passenger/reports">View My Reports</a>
+      <button type="button" class="rp-again" id="rp-again">Send another report</button>
+    </p>
+  </section>
+
+  <p class="al-disclaimer">
+    Reports are reviewed by railway engineers. This is not an emergency line and
+    nobody will call you back unless it is needed.
+  </p>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='passenger-report.js') }}"></script>
+{% endblock %}

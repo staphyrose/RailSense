@@ -1,0 +1,101 @@
+{% extends "passenger_base.html" %}
+{% block title %}My Reports{% endblock %}
+
+{% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@500;700;800&family=Anton&display=swap" rel="stylesheet">
+<style id="railsense-cinematic-theme">
+.dash-rp{
+  --pearl:#FBF3EC;--lavender-soft:#F6EBE3;--lavender-mist:#E6D2C4;
+  --periwinkle:#B20808;--electric:#B8A597;--violet:#8B0909;--plum:#2E1512;--muted:#5A4234;
+  --green:#1d8a62;--amber:#C27A12;--red:#B20808;
+  --line:rgba(74,54,44,.18);--shadow:0 24px 60px rgba(46,21,18,.22);
+  font-family:"Inter",system-ui,sans-serif;color:var(--plum);
+  max-width:700px;margin:0 auto;padding:20px 16px 48px;
+}
+body{
+  background:
+    radial-gradient(circle at 85% 8%,rgba(178,8,8,.16),transparent 32%),
+    radial-gradient(circle at 8% 92%,rgba(128,99,80,.45),transparent 40%),
+    linear-gradient(165deg,#F6EBE3 0%,#EDD9CC 30%,#B8A597 68%,#806350 100%) fixed !important;
+}
+.dash-rp [hidden]{display:none !important}
+
+/* header — photo card */
+.dash-rp .rp-head{
+  position:relative;padding:40px 8px 28px;margin-bottom:18px;border-radius:0;color:var(--plum);
+  box-shadow:none;background:none;
+  animation:rp-in .9s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes rp-in{from{opacity:0;transform:translateY(30px) scale(.97)}to{opacity:1;transform:none}}
+.dash-rp .rp-head h1{margin:0;font-family:"Anton","Bebas Neue",Impact,sans-serif;font-weight:400;text-transform:uppercase;font-size:clamp(54px,9vw,104px);line-height:.95;letter-spacing:.01em;color:var(--plum)}
+.dash-rp .rp-sub{margin:14px 0 0;max-width:480px;font-size:15px;line-height:1.7;color:var(--muted)}
+
+/* list panel */
+.dash-rp .panel{
+  margin-bottom:18px;border-radius:32px;overflow:hidden;background:linear-gradient(160deg,#FBF3EC 0%,#F6EBE3 45%,#E6D2C4 100%);border:1px solid #B8A597;
+  box-shadow:0 18px 50px rgba(46,21,18,.16);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  animation:rp-in .9s .1s cubic-bezier(.2,.8,.2,1) both;
+}
+.dash-rp .rp-list{list-style:none;margin:0;padding:0}
+.dash-rp .rp-list:empty{display:none}
+.dash-rp .rp-list > li{
+  padding:20px 28px;border-top:1px solid rgba(74,54,44,.12);font-size:14px;line-height:1.65;color:var(--plum);
+  transition:background .25s;
+}
+.dash-rp .rp-list > li:first-child{border-top:none}
+.dash-rp .rp-list > li:hover{background:var(--lavender-soft)}
+.dash-rp .rp-list > li *{color:inherit}
+.dash-rp .rp-list > li h2,.dash-rp .rp-list > li h3,.dash-rp .rp-list > li strong{font-family:"Manrope",sans-serif;letter-spacing:-.02em}
+.dash-rp .rp-list > li p,.dash-rp .rp-list > li small,.dash-rp .rp-list > li time{color:var(--muted)}
+.dash-rp .rp-list [class*="status"],.dash-rp .rp-list [class*="badge"],.dash-rp .rp-list [class*="chip"]{
+  display:inline-block;padding:3px 11px;border-radius:999px;font-size:12px;font-weight:600;
+  background:var(--lavender-mist);color:var(--violet);border:1px solid rgba(139,9,9,.2);
+}
+.dash-rp .rp-list [class*="resolved"],.dash-rp .rp-list [class*="closed"]{background:rgba(29,138,98,.10);color:#1d8a62;border-color:rgba(29,138,98,.28)}
+.dash-rp .rp-list [class*="review"],.dash-rp .rp-list [class*="progress"]{background:rgba(194,122,18,.13);color:#7a4d0a;border-color:rgba(194,122,18,.32)}
+
+.dash-rp .rp-empty{margin:0;padding:34px 28px;text-align:center;font-size:14px;line-height:1.7;color:var(--muted)}
+.dash-rp .rp-empty a{color:var(--violet);font-weight:600;text-decoration:none}
+.dash-rp .rp-empty a:hover{text-decoration:underline}
+.dash-rp .rp-err{margin:0;font-size:12.5px;font-weight:500;line-height:1.5;color:#B20808}
+.dash-rp .rp-err:empty{display:none}
+.dash-rp .rp-err:not(:empty){margin:0 28px 24px;padding:12px 16px;border-radius:14px;background:rgba(178,8,8,.10)}
+
+.dash-rp .al-disclaimer{margin:18px 6px 0;font-size:12px;line-height:1.7;color:var(--muted)}
+.dash-rp a:focus-visible,.dash-rp button:focus-visible{outline:2px solid var(--violet);outline-offset:3px}
+
+@media(max-width:600px){
+  .dash-rp{padding:12px 10px 32px}
+  .dash-rp .rp-head{padding:30px 6px 22px;border-radius:0}
+  .dash-rp .panel{border-radius:24px}
+  .dash-rp .rp-list > li{padding:18px 20px}
+  .dash-rp .rp-err:not(:empty){margin:0 20px 20px}
+}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms !important;transition-duration:.01ms !important}}
+</style>
+
+<div class="dash dash-narrow dash-rp">
+
+  <section class="rp-head" aria-labelledby="rps-title">
+    <h1 id="rps-title">My Reports</h1>
+    <p class="rp-sub">Issues you have reported and where they stand.</p>
+  </section>
+
+  <section class="panel rp-list-panel" aria-label="Your reports">
+    <ul class="rp-list" id="rps-list" aria-live="polite"></ul>
+    <p class="rp-empty" id="rps-empty" hidden>
+      You have not reported anything yet. <a href="/passenger/report">Report an issue</a>
+    </p>
+    <p class="rp-err" id="rps-error" role="alert"></p>
+  </section>
+
+  <p class="al-disclaimer">This list updates by itself while you keep the page open.</p>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='passenger-reports.js') }}"></script>
+{% endblock %}

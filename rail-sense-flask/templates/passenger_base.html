@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{% block title %}Dashboard{% endblock %} | RailSense</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='passenger.css') }}">
+<style id="railsense-theme-override">
+/* RailSense red / cream theme for the shell — design only, no behaviour changes */
+:root{
+  --rs-dark:#8B0909;--rs-red:#B20808;--rs-cream:#EDD9CC;--rs-khaki:#B8A597;--rs-coyote:#806350;--rs-deep:#2E1512;--rs-card:#F6EBE3;
+}
+
+/* TOP BAR: no filled bar — the controls float as cream pills */
+.topbar{
+  background:transparent !important;border:0 !important;border-bottom:0 !important;
+  box-shadow:none !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;
+}
+.topbar .brand{
+  background:linear-gradient(135deg,#FBF3EC,#EDD9CC) !important;border:1px solid var(--rs-khaki);border-radius:999px;
+  padding:6px 18px 6px 8px !important;box-shadow:0 8px 24px rgba(46,21,18,.18);
+}
+.topbar .brand-name{color:var(--rs-dark) !important;font-weight:700}
+.topbar .brand-tag{color:#5A4234 !important}
+.topbar .icon-btn{
+  background:linear-gradient(135deg,#FBF3EC,#EDD9CC) !important;color:var(--rs-deep) !important;
+  border:1px solid var(--rs-khaki) !important;box-shadow:0 8px 24px rgba(46,21,18,.18);
+}
+.topbar .bell-dot{background:var(--rs-red) !important}
+.topbar .btn-emergency{
+  background:linear-gradient(135deg,var(--rs-dark),var(--rs-red)) !important;color:#FBF3EC !important;
+  border:0 !important;box-shadow:0 8px 24px rgba(46,21,18,.28);
+}
+.topbar .profile-chip{
+  background:linear-gradient(135deg,#FBF3EC,#EDD9CC) !important;border:1px solid var(--rs-khaki) !important;
+  border-radius:999px;box-shadow:0 8px 24px rgba(46,21,18,.18);
+}
+.topbar .profile-chip .avatar{background:var(--rs-dark) !important;color:#FBF3EC !important}
+.topbar .profile-name{color:var(--rs-deep) !important}
+.topbar .profile-role{color:#5A4234 !important}
+.topbar .btn-logout{
+  background:linear-gradient(135deg,#FBF3EC,#EDD9CC) !important;color:var(--rs-deep) !important;
+  border:1px solid var(--rs-khaki) !important;box-shadow:0 8px 24px rgba(46,21,18,.18);
+}
+.topbar .btn-logout:hover{background:var(--rs-dark) !important;color:#FBF3EC !important}
+
+/* SIDEBAR: no box — each link floats as its own cream pill (desktop);
+   the mobile drawer keeps a filled background so it stays readable */
+.sidenav .navlink{
+  color:var(--rs-deep) !important;
+  background:linear-gradient(135deg,#FBF3EC,#EDD9CC) !important;border:1px solid var(--rs-khaki) !important;
+  border-radius:999px !important;box-shadow:0 8px 24px rgba(46,21,18,.16);
+}
+.sidenav .navlink .ic{color:var(--rs-coyote) !important}
+.sidenav .navlink:hover{background:#fff !important}
+.sidenav .navlink.is-active{
+  background:linear-gradient(135deg,var(--rs-dark),var(--rs-red)) !important;color:#FBF3EC !important;border-color:transparent !important;
+}
+.sidenav .navlink.is-active .ic{color:#FBF3EC !important}
+.sidenav .navlink-emergency .ic{color:var(--rs-red) !important}
+.sidenav .navlink-emergency.is-active .ic{color:#FBF3EC !important}
+.sidenav .profile-name{color:var(--rs-deep) !important}
+.sidenav .profile-role{color:#5A4234 !important}
+.sidenav .avatar{background:var(--rs-dark) !important;color:#FBF3EC !important}
+.sidenav .drawer-account{border-top:1px solid var(--rs-khaki) !important}
+.sidenav .btn-logout{background:var(--rs-dark) !important;color:#FBF3EC !important;border:0 !important}
+@media (min-width:901px){
+  .sidenav{background:transparent !important;border:0 !important;border-right:0 !important;box-shadow:none !important;min-height:0}
+}
+@media (max-width:900px){
+  .sidenav{background:linear-gradient(170deg,#F6EBE3 0%,#EDD9CC 45%,#B8A597 100%) !important;border-right:1px solid var(--rs-khaki) !important}
+}
+</style>
+</head>
+
+<body data-page="{{ active }}">
+
+<!-- ICON SPRITE -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></symbol>
+    <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M12 8v5M12 16v.5"/></symbol>
+    <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></symbol>
+    <symbol id="i-clipboard" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12h6M9 16h4"/></symbol>
+    <symbol id="i-lifebuoy" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M5.6 5.6l3.9 3.9M14.5 14.5l3.9 3.9M18.4 5.6l-3.9 3.9M9.5 14.5l-3.9 3.9"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 6 2 7 2 7H4s2-1 2-7"/><path d="M10 20a2 2 0 0 0 4 0"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 4H5v16h4"/><path d="M16 8l4 4-4 4M20 12H9"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6"/></symbol>
+    <symbol id="i-train" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 11h14M9 21l2-4M15 21l-2-4M9 7h6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></symbol>
+    <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></symbol>
+  </defs>
+</svg>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- HEADER -->
+<header class="topbar">
+  <button class="icon-btn menu-btn" id="menu-btn" type="button" aria-label="Open menu" aria-controls="sidenav" aria-expanded="false">
+    <svg class="ic"><use href="#i-menu"/></svg>
+  </button>
+
+  <a class="brand" href="/passenger/dashboard" aria-label="RailSense dashboard">
+    <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+      <rect width="32" height="32" rx="8" fill="#8B0909"/>
+      <path d="M12 27L15 7M20 27L17 7" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M12.8 22h6.4M13.7 17h4.6M14.6 12h2.8" stroke="#EDD9CC" stroke-width="1.8" stroke-linecap="round"/>
+      <circle cx="16" cy="4.6" r="2" fill="#2FBF71"/>
+    </svg>
+    <span class="brand-text">
+      <span class="brand-name">RailSense</span>
+      <span class="brand-tag">Smarter Tracks. Safer Journeys.</span>
+    </span>
+  </a>
+
+  <div class="top-actions">
+    <div class="bell-wrap">
+      <button class="icon-btn" id="bell-btn" type="button" aria-label="Notifications" aria-haspopup="true" aria-expanded="false" aria-controls="bell-panel">
+        <svg class="ic"><use href="#i-bell"/></svg>
+        <span class="bell-dot" id="bell-dot" hidden></span>
+      </button>
+      <div class="bell-panel" id="bell-panel" hidden>
+        <p class="bell-title">Notifications</p>
+        <ul class="bell-list" id="bell-list">
+          <li class="bell-empty">Loading updates…</li>
+        </ul>
+      </div>
+    </div>
+
+    <a class="btn-emergency" href="/passenger/emergency">
+      <svg class="ic"><use href="#i-lifebuoy"/></svg>
+      <span>Emergency Help</span>
+    </a>
+
+    <a class="profile-chip" href="/passenger/profile" aria-label="Your profile, {{ passenger.name }}">
+      <span class="avatar" aria-hidden="true">{{ passenger.initials }}</span>
+      <span class="profile-text">
+        <span class="profile-name">{{ passenger.name }}</span>
+        <span class="profile-role">Passenger</span>
+      </span>
+    </a>
+
+    <button class="btn-logout" type="button" data-logout>
+      <svg class="ic"><use href="#i-logout"/></svg>
+      <span>Logout</span>
+    </button>
+  </div>
+</header>
+
+<div class="shell">
+
+  <!-- SIDEBAR / DRAWER -->
+  <nav class="sidenav" id="sidenav" aria-label="Passenger navigation">
+    <ul class="navlist">
+      <li><a class="navlink{% if active == 'dashboard' %} is-active{% endif %}" href="/passenger/dashboard"{% if active == 'dashboard' %} aria-current="page"{% endif %}><svg class="ic"><use href="#i-home"/></svg><span>Dashboard</span></a></li>
+      <li><a class="navlink{% if active == 'journey' %} is-active{% endif %}" href="/passenger/journey"{% if active == 'journey' %} aria-current="page"{% endif %}><svg class="ic"><use href="#i-compass"/></svg><span>My Journey</span></a></li>
+      <li><a class="navlink{% if active == 'report' %} is-active{% endif %}" href="/passenger/report"{% if active == 'report' %} aria-current="page"{% endif %}><svg class="ic"><use href="#i-pencil"/></svg><span>Report Issue</span></a></li>
+      <li><a class="navlink{% if active == 'chat' %} is-active{% endif %}" href="/passenger/chat"{% if active == 'chat' %} aria-current="page"{% endif %}><svg class="ic"><use href="#i-chat"/></svg><span>Passenger Chat</span></a></li>
+      <li><a class="navlink{% if active == 'reports' %} is-active{% endif %}" href="/passenger/reports"{% if active == 'reports' %} aria-current="page"{% endif %}><svg class="ic"><use href="#i-clipboard"/></svg><span>My Reports</span></a></li>
+      <li><a class="navlink navlink-emergency{% if active == 'emergency' %} is-active{% endif %}" href="/passenger/emergency"{% if active == 'emergency' %} aria-current="page"{% endif %}><svg class="ic"><use href="#i-lifebuoy"/></svg><span>Emergency Help</span></a></li>
+      <li><a class="navlink{% if active == 'profile' %} is-active{% endif %}" href="/passenger/profile"{% if active == 'profile' %} aria-current="page"{% endif %}><svg class="ic"><use href="#i-user"/></svg><span>Profile</span></a></li>
+    </ul>
+
+    <div class="drawer-account">
+      <div class="drawer-who">
+        <span class="avatar" aria-hidden="true">{{ passenger.initials }}</span>
+        <span class="profile-text">
+          <span class="profile-name">{{ passenger.name }}</span>
+          <span class="profile-role">Passenger</span>
+        </span>
+      </div>
+      <button class="btn-logout btn-logout-drawer" type="button" data-logout>
+        <svg class="ic"><use href="#i-logout"/></svg>
+        <span>Logout</span>
+      </button>
+    </div>
+  </nav>
+  <div class="scrim" id="scrim" hidden></div>
+
+  <main class="main" id="main" tabindex="-1">
+    {% block content %}{% endblock %}
+  </main>
+</div>
+
+<!-- MOBILE EMERGENCY BAR -->
+<a class="emergency-bar" href="/passenger/emergency">
+  <svg class="ic"><use href="#i-lifebuoy"/></svg>
+  <span>Emergency Help</span>
+</a>
+
+<script src="{{ url_for('static', filename='passenger.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

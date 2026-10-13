@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rail Safety Passenger Dashboard</title>
+<style>
+body{font-family:Arial;margin:0;background:#f5f7fa;color:#17202a}
+header{background:#17202a;color:white;padding:16px 22px}
+main{max-width:1100px;margin:auto;padding:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.card{background:white;border-radius:12px;padding:18px;box-shadow:0 2px 8px #0001}
+button{padding:10px 14px;border:0;border-radius:8px;cursor:pointer}
+input,select{padding:9px;margin:4px 0;width:95%}
+#chat{height:220px;overflow:auto;border:1px solid #ddd;padding:8px}
+.msg{padding:6px;border-bottom:1px solid #eee}
+.badge{font-weight:bold}
+</style>
+</head>
+<body>
+<header><h2>🚆 Rail Safety — Passenger Dashboard</h2></header>
+<main>
+<div class="grid">
+<section class="card"><h3>Live Trains</h3><div id="trains">Loading...</div></section>
+<section class="card"><h3>In-Cab / Passenger Advisory</h3><div id="advisory">Loading...</div></section>
+<section class="card"><h3>My Location</h3><div id="loc">Not shared</div><button onclick="shareLocation()">Share location</button></section>
+<section class="card"><h3>Emergency Contacts</h3>
+<p>🚓 Railway Police: <b>139</b></p>
+<p>🚆 Railway Helpline: <b>139</b></p>
+<p>🆘 Emergency: <b>112</b></p>
+<button onclick="alert('Call the appropriate emergency number from your phone.')">Emergency Help</button>
+</section>
+<section class="card"><h3>Report Something</h3>
+<select id="category"><option>Safety concern</option><option>Delay</option><option>Crowding</option><option>Defect noticed</option></select>
+<input id="reportmsg" placeholder="What happened?">
+<input id="rlat" placeholder="Latitude">
+<input id="rlon" placeholder="Longitude">
+<button onclick="report()">Submit report</button>
+</section>
+<section class="card"><h3>Journey Companion</h3>
+<input id="trainid" value="T1" placeholder="Train ID">
+<button onclick="createCompanion()">Create share link</button>
+<div id="companion"></div>
+</section>
+<section class="card"><h3>Route Chat</h3>
+<input id="route" value="Panvel-Thane">
+<div id="chat"></div>
+<input id="name" value="Passenger">
+<input id="chatmsg" placeholder="Message">
+<button onclick="sendChat()">Send</button>
+</section>
+<section class="card"><h3>Defect Hotspots</h3>
+<div id="heatmap">Loading...</div>
+</section>
+</div>
+</main>
+<script>
+const API="http://127.0.0.1:8000";
+async function get(path){return (await fetch(API+path)).json();}
+async function refresh(){
+ const ts=await get("/api/trains");
+ document.getElementById("trains").innerHTML=ts.map(t=>`<p><b>${t.number}</b> — ${t.route} — ${t.status}</p>`).join("");
+ const a=await get("/api/advisory");
+ document.getElementById("advisory").innerHTML=`<span class="badge">${a.level}</span><p>${a.message}</p>`;
+ const h=await get("/api/heatmap");
+ document.getElementById("heatmap").innerHTML=h.length?h.map(x=>`<p>📍 ${x.lat}, ${x.lon} — ${x.count} defect(s)</p>`).join(""):"No hotspot data yet.";
+}
+async function shareLocation(){
+ navigator.geolocation?.getCurrentPosition(async p=>{
+  const {latitude:lat,longitude:lon}=p.coords;
+  await fetch(API+"/api/location",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({lat,lon})});
+  document.getElementById("loc").innerText=`${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+  document.getElementById("rlat").value=lat; document.getElementById("rlon").value=lon;
+ });
+}
+async function report(){
+ const body={lat:+document.getElementById("rlat").value||0,lon:+document.getElementById("rlon").value||0,
+ category:category.value,message:reportmsg.value};
+ await fetch(API+"/api/reports",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+ reportmsg.value=""; alert("Report submitted"); refresh();
+}
+async function createCompanion(){
+ const id=document.getElementById("trainid").value;
+ const r=await fetch(API+"/api/companion?train_id="+encodeURIComponent(id),{method:"POST"});
+ const x=await r.json();
+ document.getElementById("companion").innerHTML=x.token?`Share token: <b>${x.token}</b>`:"Error";
+}
+let socket;
+function connectChat(){
+ const route=document.getElementById("route").value;
+ if(socket) socket.close();
+ socket=new WebSocket("ws://127.0.0.1:8000/ws/chat/"+encodeURIComponent(route));
+ socket.onmessage=e=>addMsg(JSON.parse(e.data));
+ get("/api/chat/"+encodeURIComponent(route)).then(x=>x.forEach(addMsg));
+}
+function addMsg(m){document.getElementById("chat").innerHTML+=`<div class="msg"><b>${m.user_name}</b>: ${escapeHtml(m.message)}</div>`;}
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
+function sendChat(){
+ if(!socket||socket.readyState!==1)return alert("Connecting to chat...");
+ socket.send(JSON.stringify({user_name:document.getElementById("name").value,message:document.getElementById("chatmsg").value}));
+ document.getElementById("chatmsg").value="";
+}
+refresh(); connectChat(); setInterval(refresh,5000);
+</script>
+</body>
+</html>

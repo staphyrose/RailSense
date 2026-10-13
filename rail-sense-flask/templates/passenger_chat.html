@@ -1,0 +1,218 @@
+{% extends "passenger_base.html" %}
+{% block title %}Passenger Chat{% endblock %}
+
+{% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@500;700;800&family=Anton&display=swap" rel="stylesheet">
+<style id="railsense-cinematic-theme">
+.dash-chat{
+  --pearl:#FBF3EC;--lavender-soft:#F6EBE3;--lavender-mist:#E6D2C4;
+  --electric:#B8A597;--violet:#8B0909;--plum:#2E1512;--muted:#5A4234;
+  --green:#1d8a62;--amber:#C27A12;--red:#B20808;
+  --line:rgba(74,54,44,.18);--shadow:0 24px 60px rgba(46,21,18,.22);
+  font-family:"Inter",system-ui,sans-serif;color:var(--plum);
+  max-width:900px;margin:0 auto;padding:20px 16px 48px;
+}
+body{
+  background:
+    radial-gradient(circle at 85% 8%,rgba(178,8,8,.16),transparent 32%),
+    radial-gradient(circle at 8% 92%,rgba(128,99,80,.45),transparent 40%),
+    linear-gradient(165deg,#F6EBE3 0%,#EDD9CC 30%,#B8A597 68%,#806350 100%) fixed !important;
+}
+.dash-chat [hidden]{display:none !important}
+.dash-chat .ic{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.dash-chat .demo-banner{margin-bottom:14px;padding:12px 16px;border-radius:16px;font-size:13px;background:rgba(194,122,18,.13);color:#7a4d0a;border:1px solid rgba(194,122,18,.32)}
+.dash-chat .lamp{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 5px rgba(29,138,98,.15);flex:none}
+.dash-chat .lamp.live{animation:ch-pulse 2s infinite}
+@keyframes ch-pulse{50%{box-shadow:0 0 0 10px rgba(29,138,98,0)}}
+
+/* ROOM HEADER — no photo, no box: text sits on the page gradient */
+.dash-chat .chat{background:none !important;border:0 !important;box-shadow:none !important}
+.dash-chat .chat-head{
+  position:relative;padding:14px 8px 12px;margin-bottom:10px;border-radius:0;
+  background:none !important;border:0 !important;box-shadow:none !important;color:var(--plum) !important;
+}
+.dash-chat .chat-head *{color:inherit}
+.dash-chat .chat-head-top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.dash-chat .chat-kicker{display:inline-flex;align-items:center;gap:12px;font-family:"Anton","Bebas Neue",Impact,sans-serif;font-weight:400;text-transform:uppercase;font-size:clamp(34px,5vw,60px);line-height:.95;letter-spacing:.01em;color:var(--plum) !important}
+.dash-chat .chat-kicker .ic{width:clamp(26px,3.6vw,40px);height:clamp(26px,3.6vw,40px);color:var(--violet)}
+.dash-chat .chat-sos{
+  display:inline-flex;align-items:center;padding:13px 20px;border-radius:999px;border:0;text-decoration:none;
+  background:linear-gradient(135deg,#8B0909,#B20808) !important;color:#FBF3EC !important;font:700 13px "Manrope",sans-serif;
+  box-shadow:0 8px 24px rgba(46,21,18,.28);transition:transform .25s,box-shadow .25s;
+}
+.dash-chat .chat-sos:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(46,21,18,.32)}
+.dash-chat .chat-train{display:flex;align-items:center;gap:28px;flex-wrap:wrap;margin-top:12px}
+.dash-chat .chat-num{display:flex;flex-direction:column;gap:4px}
+.dash-chat .chat-num-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.7}
+.dash-chat .chat-num strong{font-family:"Anton","Bebas Neue",Impact,sans-serif;font-weight:400;font-size:clamp(38px,5vw,60px);line-height:.95;letter-spacing:.01em;color:var(--plum)}
+.dash-chat .chat-route-line{margin:0;font:800 clamp(18px,2.6vw,26px) "Manrope",sans-serif;letter-spacing:-.02em;color:var(--plum)}
+.dash-chat .chat-route-name{margin:8px 0 0;font-size:13px;color:var(--muted)}
+.dash-chat .chat-head-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px}
+.dash-chat .chat-room-label{margin:0;font:800 12px "Manrope",sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--violet) !important}
+.dash-chat .chat-online{display:inline-flex;align-items:center;gap:8px;margin:0;padding:8px 14px;border-radius:999px;font-size:12px;background:rgba(255,255,255,.55);border:1px solid #B8A597}
+
+/* alert strip + notice */
+.dash-chat .chat-pin,.dash-chat .chat-note{
+  margin:0 0 12px;padding:12px 16px;border-radius:16px;font-size:13px;line-height:1.6;color:var(--plum) !important;
+  background:rgba(255,255,255,.6) !important;border:1px solid #B8A597 !important;
+}
+.dash-chat .text-link{color:var(--violet) !important;font-weight:600}
+
+/* MESSAGES — cream panel (its own scrolling card) */
+.dash-chat .chat-body{
+  position:relative;border-radius:32px;overflow:hidden;
+  background:linear-gradient(160deg,#FBF3EC 0%,#F6EBE3 45%,#E6D2C4 100%) !important;border:1px solid #B8A597 !important;
+  box-shadow:0 18px 50px rgba(46,21,18,.16) !important;
+}
+.dash-chat .chat{display:block !important;height:auto !important;max-height:none !important;overflow:visible !important}
+.main,.shell{height:auto !important;max-height:none !important;overflow:visible !important}
+/* was 90px — that space was only needed for the old sticky composer */
+.dash-chat{padding-bottom:40px}
+.dash-chat .chat-body{flex:none !important;height:auto !important;min-height:180px !important}
+/* fixed scroll area so messages never run underneath the composer */
+.dash-chat .chat-log{
+  list-style:none;margin:0;padding:22px 24px;color:var(--plum);
+  height:auto !important;min-height:180px !important;max-height:min(38vh,320px) !important;
+  overflow-y:auto !important;overscroll-behavior:contain;
+  display:flex;flex-direction:column;gap:10px;
+}
+.dash-chat .chat-log > li{color:var(--plum)}
+.dash-chat .chat-log p,.dash-chat .chat-log small,.dash-chat .chat-log time{color:var(--muted)}
+/* message bubbles: plain white, dark text; inner pieces stay transparent */
+.dash-chat .chat-log [class*="bubble"]{
+  background:#fff !important;color:#2E1512 !important;border:1px solid #B8A597 !important;
+  box-shadow:0 4px 14px rgba(46,21,18,.10) !important;
+}
+.dash-chat .chat-log [class*="bubble"] *{background:transparent !important;color:inherit;box-shadow:none !important;border-color:transparent}
+.dash-chat .chat-log [class*="bubble"] time,.dash-chat .chat-log [class*="bubble"] small{color:#5A4234 !important}
+.dash-chat .chat-log [class*="mine"][class*="bubble"],.dash-chat .chat-log [class*="self"][class*="bubble"]{
+  background:#fff !important;color:#2E1512 !important;border-color:#8B0909 !important;
+}
+.dash-chat .chat-jump{
+  position:absolute;right:18px;bottom:16px;display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border:0;border-radius:999px;
+  background:linear-gradient(135deg,#8B0909,#B20808) !important;color:#FBF3EC !important;font:700 12px "Manrope",sans-serif;cursor:pointer;
+  box-shadow:0 8px 24px rgba(46,21,18,.28);
+}
+
+/* COMPOSER – separate card, sits BELOW the message panel */
+.dash-chat .chat-composer{
+  display:block !important;visibility:visible !important;
+  position:static !important;          /* was sticky: this caused the overlap */
+  margin-top:18px;padding:18px 20px 16px;border-radius:28px;
+  background:linear-gradient(160deg,#FBF3EC 0%,#F6EBE3 45%,#E6D2C4 100%) !important;border:1px solid #B8A597 !important;
+  box-shadow:0 18px 50px rgba(46,21,18,.16) !important;
+}
+.dash-chat .chat-compose-row{display:flex;align-items:flex-end;gap:12px}
+.dash-chat .chat-input{
+  flex:1;min-width:0;padding:14px 16px;border-radius:18px;border:1.5px solid #806350 !important;background:#D9C2B2 !important;color:#2E1512 !important;
+  font:400 14px/1.5 "Inter",sans-serif;outline:none;resize:none;box-shadow:0 4px 12px rgba(46,21,18,.12);transition:border-color .25s,box-shadow .25s;
+  overflow:hidden;min-height:48px;max-height:140px;   /* removes the tiny scrollbar arrows */
+}
+.dash-chat .chat-input::placeholder{color:#7a6556}
+.dash-chat .chat-input:focus{border-color:#8B0909 !important;box-shadow:0 0 0 5px rgba(139,9,9,.2)}
+.dash-chat .chat-send{
+  display:inline-flex;align-items:center;gap:8px;padding:15px 22px;border:0;border-radius:999px;cursor:pointer;
+  background:linear-gradient(135deg,#8B0909,#B20808) !important;color:#FBF3EC !important;font:700 13px "Manrope",sans-serif;
+  transition:transform .25s,box-shadow .25s,opacity .25s;
+}
+.dash-chat .chat-send:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 24px rgba(46,21,18,.3)}
+.dash-chat .chat-send:disabled{opacity:.5;cursor:not-allowed}
+.dash-chat .chat-error{margin:0 0 10px;padding:10px 14px;border-radius:14px;font-size:12.5px;background:rgba(178,8,8,.10);color:#B20808}
+.dash-chat .chat-hint{margin:10px 4px 0;font-size:12px;line-height:1.6;color:var(--muted)}
+
+.dash-chat a:focus-visible,.dash-chat button:focus-visible,.dash-chat textarea:focus-visible{outline:2px solid #8B0909;outline-offset:3px}
+@media(max-width:600px){
+  .dash-chat{padding:12px 10px 32px}
+  .dash-chat .chat-head{padding:24px 6px 18px}
+  .dash-chat .chat-body{border-radius:24px}
+  .dash-chat .chat-log{padding:16px}
+  .dash-chat .chat-composer{border-radius:22px;padding:14px}
+}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms !important;transition-duration:.01ms !important}}
+</style>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="c-send" viewBox="0 0 24 24"><path d="M4 12l16-8-6 16-3-7z"/><path d="M11 13l9-9"/></symbol>
+    <symbol id="c-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 5.2a3 3 0 0 1 0 5.6"/><path d="M18 14.3c1.8.8 3 2.6 3 4.7"/></symbol>
+    <symbol id="c-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.6-3.2 7.9-8 9-4.8-1.1-8-4.4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></symbol>
+    <symbol id="c-alert" viewBox="0 0 24 24"><path d="M12 3.5l9.5 16.5h-19z"/><path d="M12 10v4.5"/><path d="M12 17.4v.1"/></symbol>
+    <symbol id="c-wrench" viewBox="0 0 24 24"><path d="M14.5 6.5a4 4 0 0 0 5 5L21 13l-8 8a2.1 2.1 0 0 1-3-3l8-8z"/><path d="M14.5 6.5l3-3 3 3-3 3"/></symbol>
+    <symbol id="c-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></symbol>
+    <symbol id="c-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9.5h8"/><path d="M8 12.5h5"/></symbol>
+    <symbol id="c-down" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M6 13l6 6 6-6"/></symbol>
+  </defs>
+</svg>
+
+<div class="dash dash-chat">
+
+  <div class="demo-banner" id="ch-error" hidden role="status">
+    Chat connection lost. Retrying&hellip;
+  </div>
+
+  <section class="chat" aria-labelledby="ch-title">
+
+    <!-- ROOM HEADER -->
+    <header class="chat-head">
+      <div class="chat-head-top">
+        <span class="chat-kicker"><svg class="ic" aria-hidden="true"><use href="#c-chat"/></svg><span id="ch-title">Passenger Chat</span></span>
+        <a class="chat-sos" href="/passenger/emergency">Emergency Help</a>
+      </div>
+
+      <div class="chat-train">
+        <div class="chat-num">
+          <span class="chat-num-label">Train</span>
+          <strong id="ch-train">&mdash;</strong>
+        </div>
+        <div class="chat-route">
+          <p class="chat-route-line" id="ch-route">Loading your train&hellip;</p>
+          <p class="chat-route-name" id="ch-name"></p>
+        </div>
+      </div>
+
+      <div class="chat-head-foot">
+        <p class="chat-room-label" id="ch-room">Passenger Community</p>
+        <p class="chat-online" aria-live="polite"><span class="lamp live" aria-hidden="true"></span><svg class="ic" aria-hidden="true"><use href="#c-users"/></svg><span id="ch-online">Connecting&hellip;</span></p>
+      </div>
+    </header>
+
+    <!-- ACTIVE ALERT STRIP -->
+    <p class="chat-pin" id="ch-pin" hidden></p>
+
+    <!-- NOTICE when no journey is chosen yet -->
+    <p class="chat-note" id="ch-note" hidden>
+      You are in the community for the default train. <a class="text-link" href="/passenger/journey">Choose your journey</a> to join your own train&rsquo;s room.
+    </p>
+
+    <!-- TIMELINE -->
+    <div class="chat-body">
+      <ol class="chat-log" id="ch-log" role="log" aria-live="polite" aria-relevant="additions" aria-label="Messages in your train community"></ol>
+      <button type="button" class="chat-jump" id="ch-jump" hidden>
+        <svg class="ic" aria-hidden="true"><use href="#c-down"/></svg>New messages
+      </button>
+    </div>
+
+    <!-- COMPOSER -->
+    <form class="chat-composer" id="ch-form" autocomplete="off">
+      <p class="chat-error" id="ch-send-error" role="alert" hidden></p>
+      <div class="chat-compose-row">
+        <label class="sr-only" for="ch-input">Message to passengers on your train</label>
+        <textarea id="ch-input" class="chat-input" rows="1" maxlength="500"
+          enterkeyhint="send" autocapitalize="sentences"
+          placeholder="Message passengers on your train"></textarea>
+        <button type="submit" class="chat-send" id="ch-send" disabled>
+          <svg class="ic" aria-hidden="true"><use href="#c-send"/></svg><span>Send</span>
+        </button>
+      </div>
+      <p class="chat-hint"><span id="ch-count" hidden></span><span class="chat-hint-text">Be respectful and keep personal details private. In an emergency, use Emergency Help or call railway staff.</span></p>
+    </form>
+
+  </section>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='passenger-chat.js') }}"></script>
+{% endblock %}

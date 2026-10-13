@@ -1,0 +1,242 @@
+{% extends "passenger_base.html" %}
+{% block title %}My Journey{% endblock %}
+
+{% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@500;700;800&family=Anton&display=swap" rel="stylesheet">
+<style id="railsense-cinematic-theme">
+.dash.jr{
+  --pearl:#FBF3EC;--lavender-soft:#F6EBE3;--lavender-mist:#E6D2C4;
+  --periwinkle:#B20808;--electric:#B8A597;--violet:#8B0909;--plum:#2E1512;--muted:#5A4234;
+  --green:#1d8a62;--amber:#C27A12;--red:#B20808;
+  --line:rgba(74,54,44,.18);--shadow:0 24px 60px rgba(46,21,18,.22);
+  font-family:"Inter",system-ui,sans-serif;color:var(--plum);
+  max-width:1080px;margin:0 auto;padding:20px 16px 48px;
+}
+body{
+  background:
+    radial-gradient(circle at 85% 8%,rgba(178,8,8,.16),transparent 32%),
+    radial-gradient(circle at 8% 92%,rgba(128,99,80,.45),transparent 40%),
+    linear-gradient(165deg,#F6EBE3 0%,#EDD9CC 30%,#B8A597 68%,#806350 100%) fixed !important;
+}
+.jr [hidden]{display:none !important}
+.jr .ic{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.jr .demo-banner{margin-bottom:14px;padding:12px 16px;border-radius:16px;font-size:13px;background:rgba(194,122,18,.13);color:#7a4d0a;border:1px solid rgba(194,122,18,.32)}
+
+/* lamps */
+.jr .lamp{display:inline-block;width:8px;height:8px;border-radius:50%;background:#8C87A2;flex:none;margin-right:2px}
+.jr .lamp.ok{background:var(--green);box-shadow:0 0 0 5px rgba(29,138,98,.15)}
+.jr .lamp.caution,.jr .lamp.warn{background:var(--amber);box-shadow:0 0 0 5px rgba(194,122,18,.18)}
+.jr .lamp.alert,.jr .lamp.bad{background:var(--red);box-shadow:0 0 0 5px rgba(178,8,8,.18)}
+.jr .lamp.live{animation:jr-pulse 2s infinite}
+@keyframes jr-pulse{50%{box-shadow:0 0 0 10px rgba(29,138,98,0)}}
+
+/* panels */
+.jr .panel{
+  margin-bottom:18px;border-radius:32px;overflow:hidden;background:linear-gradient(160deg,#FBF3EC 0%,#F6EBE3 45%,#E6D2C4 100%);border:1px solid #B8A597;
+  box-shadow:0 18px 50px rgba(46,21,18,.16);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  animation:jr-in .9s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes jr-in{from{opacity:0;transform:translateY(30px) scale(.97)}to{opacity:1;transform:none}}
+.jr .panel-head{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;padding:24px 28px;border-bottom:1px solid var(--line)}
+.jr .panel-head h2{margin:0;font:800 22px "Manrope",sans-serif;letter-spacing:-.02em;color:var(--plum)}
+.jr .panel-head h1{margin:0;font-family:"Anton","Bebas Neue",Impact,sans-serif;font-weight:400;text-transform:uppercase;font-size:clamp(34px,5vw,56px);line-height:1;letter-spacing:.01em;color:var(--plum)}
+.jr .updated{display:inline-flex;align-items:center;gap:9px;margin:0;font-size:12px;color:var(--muted)}
+
+/* picker */
+.jr .jr-form{display:grid;grid-template-columns:repeat(3,1fr) auto;gap:14px;align-items:end;padding:24px 28px 28px}
+.jr .jr-field{display:flex;flex-direction:column;gap:8px;min-width:0}
+.jr .jr-field > span{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.jr .jr-field select{
+  width:100%;padding:14px 16px;border-radius:15px;border:1.5px solid #806350;background:#D9C2B2;color:#2E1512;box-shadow:0 4px 12px rgba(46,21,18,.12);
+  font:500 14px "Inter",sans-serif;outline:none;transition:border-color .25s,box-shadow .25s;
+}
+.jr .jr-field select:focus{border-color:#8B0909;box-shadow:0 0 0 5px rgba(139,9,9,.2)}
+.jr .jr-field select option{background:#F6EBE3;color:#2E1512}
+.jr .btn-primary{
+  padding:15px 22px;border:none;border-radius:15px;background:var(--violet);color:#fff;
+  font:600 13px "Inter",sans-serif;cursor:pointer;white-space:nowrap;transition:transform .25s,box-shadow .25s,opacity .25s;
+}
+.jr .btn-primary:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 24px rgba(46,21,18,.3)}
+.jr .btn-primary:disabled{opacity:.5;cursor:not-allowed}
+.jr .jr-form-msg{margin:0 28px 24px;padding:12px 16px;border-radius:14px;font-size:13px;background:rgba(178,8,8,.10);color:#B20808}
+
+/* alert (filled in by the script) */
+.jr #jr-alert{margin-bottom:18px}
+.jr #jr-alert:empty{display:none}
+.jr #jr-alert > *{
+  padding:22px 26px;border-radius:28px;color:var(--plum);background:rgba(255,255,255,.84);
+  border:1px solid #fff;border-left:5px solid var(--green);box-shadow:0 18px 50px rgba(46,21,18,.16);
+}
+.jr #jr-alert *{color:inherit}
+.jr #jr-alert p,.jr #jr-alert small,.jr #jr-alert time{color:var(--muted)}
+.jr #jr-alert .critical,.jr #jr-alert .is-critical,.jr #jr-alert .danger,.jr #jr-alert.critical{border-left-color:var(--red)}
+.jr #jr-alert .warning,.jr #jr-alert .caution,.jr #jr-alert .is-warning,.jr #jr-alert.warning{border-left-color:var(--amber)}
+
+/* CURRENT JOURNEY — photo card */
+.jr .board{
+  position:relative;margin-bottom:18px;padding:34px 8px 36px;border-radius:0;color:var(--plum);
+  box-shadow:none;background:none;
+  animation:jr-in .9s .1s cubic-bezier(.2,.8,.2,1) both;
+}
+.jr .board *{color:inherit}
+.jr .board-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.jr .board-head h2{margin:0;font:800 12px "Manrope",sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--violet)}
+.jr .chip-light{padding:7px 12px;border-radius:999px;font-size:11px;font-weight:600;background:rgba(255,255,255,.55);border:1px solid #B8A597;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.jr .board-main{display:flex;align-items:center;gap:36px;flex-wrap:wrap;margin-top:30px}
+.jr .board-num{display:flex;flex-direction:column;gap:4px}
+.jr .board-num-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.7}
+.jr .board-num strong{font-family:"Anton","Bebas Neue",Impact,sans-serif;font-weight:400;font-size:clamp(56px,8vw,104px);line-height:.95;letter-spacing:.01em}
+.jr .board-route{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font:800 clamp(18px,2.6vw,28px) "Manrope",sans-serif;letter-spacing:-.02em}
+.jr .board-arrow{width:24px;height:24px}
+.jr .board-name{margin:14px 0 0;font-size:13px;opacity:.8}
+
+/* rail progress */
+.jr .rail{position:relative;height:28px;margin:34px 6px 8px}
+.jr .rail-track{position:absolute;left:0;right:0;top:50%;height:4px;margin-top:-2px;border-radius:4px;background:rgba(46,21,18,.22)}
+.jr .rail-done{position:absolute;left:0;top:50%;height:4px;margin-top:-2px;border-radius:4px;background:linear-gradient(90deg,#B20808,#8B0909)}
+.jr .rail-train{
+  position:absolute;top:50%;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;display:grid;place-items:center;
+  background:var(--violet);color:#fff !important;border:3px solid #fff;box-shadow:0 8px 20px rgba(46,21,18,.4);
+}
+.jr .rail-train .ic{width:14px;height:14px;color:#fff}
+.jr .jr-note{margin:12px 0 0;padding:10px 14px;border-radius:14px;font-size:12.5px;background:rgba(255,255,255,.55);border:1px solid #B8A597}
+
+/* facts */
+.jr .board-facts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:26px 0 0}
+.jr .fact{padding:16px 18px;border-radius:20px;background:rgba(255,255,255,.55);border:1px solid #B8A597;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.jr .fact dt{font-size:10px;letter-spacing:.12em;text-transform:uppercase;opacity:.72}
+.jr .fact dd{margin:8px 0 0;font:600 16px "Manrope",sans-serif;letter-spacing:-.02em;display:flex;align-items:center;gap:8px}
+
+/* route status */
+.jr .legend{display:flex;gap:16px;flex-wrap:wrap;list-style:none;margin:0;padding:0;font-size:12px;color:var(--muted)}
+.jr .legend li{display:inline-flex;align-items:center;gap:7px}
+.jr .jr-hint{margin:0;padding:18px 28px 6px;font-size:13px;color:var(--muted)}
+.jr .jr-scroll{overflow-x:auto;padding:8px 20px 22px}
+.jr .tl{list-style:none;margin:0;padding:0;color:var(--plum)}
+.jr .tl p,.jr .tl strong,.jr .tl h3,.jr .tl h4,.jr .tl b{color:var(--plum)}
+.jr .tl small,.jr .tl time{color:var(--muted)}
+.jr .jr-detail{
+  margin:0 28px 28px;padding:22px 24px;border-radius:24px;background:var(--lavender-soft);
+  border:1px solid var(--line);color:var(--plum);line-height:1.65;outline:none;
+}
+.jr .jr-detail h3,.jr .jr-detail h4,.jr .jr-detail strong{font-family:"Manrope",sans-serif;letter-spacing:-.02em;color:var(--plum)}
+.jr .jr-detail p,.jr .jr-detail small,.jr .jr-detail dd{color:var(--muted)}
+.jr .jr-detail dt{color:var(--plum)}
+
+.jr a:focus-visible,.jr button:focus-visible,.jr select:focus-visible{outline:2px solid var(--violet);outline-offset:3px}
+
+@media(max-width:960px){
+  .jr .jr-form{grid-template-columns:1fr 1fr}
+  .jr .jr-go{grid-column:1/-1}
+  .jr .board-facts{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:600px){
+  .dash.jr{padding:12px 10px 32px}
+  .jr .panel{border-radius:24px}
+  .jr .panel-head,.jr .jr-form{padding-left:20px;padding-right:20px}
+  .jr .jr-form{grid-template-columns:1fr}
+  .jr .jr-form-msg,.jr .jr-detail{margin-left:20px;margin-right:20px}
+  .jr .board{padding:26px 6px 28px;border-radius:0}
+  .jr .board-main{gap:18px}
+  .jr .board-facts{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms !important;transition-duration:.01ms !important}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.5 6.5a4 4 0 0 0 5 5L21 13l-8 8a2.1 2.1 0 0 1-3-3l8-8z"/><path d="M14.5 6.5l3-3 3 3-3 3"/></symbol>
+  </defs>
+</svg>
+
+<div class="dash jr">
+
+  <div class="demo-banner" id="jr-error" hidden role="status">
+    Live journey data is unavailable right now. Retrying&hellip;
+  </div>
+
+  <!-- PICKER -->
+  <section class="panel jr-picker" aria-labelledby="jr-pick-title">
+    <div class="panel-head">
+      <h1 id="jr-pick-title" class="jr-h1">My Journey</h1>
+      <p class="updated" aria-live="polite"><span class="lamp ok" aria-hidden="true"></span><span id="jr-updated">Updating&hellip;</span></p>
+    </div>
+    <form class="jr-form" id="jr-form" novalidate>
+      <label class="jr-field">
+        <span>Train</span>
+        <select id="jr-train"></select>
+      </label>
+      <label class="jr-field">
+        <span>Source</span>
+        <select id="jr-from"></select>
+      </label>
+      <label class="jr-field">
+        <span>Destination</span>
+        <select id="jr-to"></select>
+      </label>
+      <button class="btn-primary jr-go" type="submit" id="jr-save">Track this journey</button>
+    </form>
+    <p class="jr-form-msg" id="jr-form-msg" role="alert" hidden></p>
+  </section>
+
+  <!-- ALERT -->
+  <section id="jr-alert" aria-live="polite" aria-label="Journey alert"></section>
+
+  <!-- CURRENT JOURNEY -->
+  <section class="board" aria-labelledby="jr-board-title">
+    <div class="board-head">
+      <h2 id="jr-board-title">Current journey</h2>
+      <span class="chip-light" id="jr-category">Express</span>
+    </div>
+    <div class="board-main">
+      <div class="board-num">
+        <span class="board-num-label">Train</span>
+        <strong id="jr-number">-----</strong>
+      </div>
+      <div class="board-route">
+        <span id="jr-src">-</span>
+        <svg class="ic board-arrow" aria-label="to" role="img"><use href="#i-arrow"/></svg>
+        <span id="jr-dst">-</span>
+      </div>
+    </div>
+    <p class="board-name" id="jr-name"></p>
+
+    <div class="rail" role="img" aria-label="Journey progress" id="jr-rail">
+      <div class="rail-track"></div>
+      <div class="rail-done" id="jr-rail-done"></div>
+      <div class="rail-train" id="jr-rail-train"><svg class="ic"><use href="#i-train"/></svg></div>
+    </div>
+    <p class="jr-note" id="jr-state-note" hidden></p>
+
+    <dl class="board-facts">
+      <div class="fact"><dt>Current location</dt><dd id="jr-current">-</dd></div>
+      <div class="fact"><dt>Next station</dt><dd id="jr-next">-</dd></div>
+      <div class="fact"><dt>Destination</dt><dd id="jr-dest">-</dd></div>
+      <div class="fact"><dt>Journey status</dt><dd><span class="lamp ok live" id="jr-lamp" aria-hidden="true"></span><span id="jr-status">-</span></dd></div>
+    </dl>
+  </section>
+
+  <!-- TIMELINE + DETAIL -->
+  <section class="panel jr-timeline-card" aria-labelledby="jr-route-title">
+    <div class="panel-head">
+      <h2 id="jr-route-title">Route status</h2>
+      <ul class="legend" aria-label="Legend">
+        <li><span class="lamp ok" aria-hidden="true"></span>Normal</li>
+        <li><span class="lamp caution" aria-hidden="true"></span>Warning</li>
+        <li><span class="lamp alert" aria-hidden="true"></span>Critical</li>
+      </ul>
+    </div>
+    <p class="jr-hint">Select a station or section to see its details.</p>
+    <div class="jr-scroll"><ol class="tl" id="jr-tl" aria-label="Route timeline"></ol></div>
+
+    <div class="jr-detail" id="jr-detail" tabindex="-1" aria-live="polite" hidden></div>
+  </section>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='passenger-journey.js') }}"></script>
+{% endblock %}

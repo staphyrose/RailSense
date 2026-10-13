@@ -1,0 +1,239 @@
+{% extends "passenger_base.html" %}
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@500;700;800&family=Anton&display=swap" rel="stylesheet">
+<style id="railsense-profile-theme">
+.dash{
+  --pearl:#FBF3EC;--lavender-soft:#F6EBE3;--lavender-mist:#E6D2C4;
+  --periwinkle:#B20808;--electric:#B8A597;--violet:#8B0909;--plum:#2E1512;--muted:#5A4234;
+  --green:#1d8a62;--amber:#C27A12;--red:#B20808;
+  --line:rgba(74,54,44,.18);--shadow:0 24px 60px rgba(46,21,18,.22);
+  font-family:"Inter",system-ui,sans-serif;color:var(--plum);
+  max-width:1080px;margin:0 auto;padding:20px 16px 48px;
+}
+body{
+  background:
+    radial-gradient(circle at 85% 8%,rgba(178,8,8,.16),transparent 32%),
+    radial-gradient(circle at 8% 92%,rgba(128,99,80,.45),transparent 40%),
+    linear-gradient(165deg,#F6EBE3 0%,#EDD9CC 30%,#B8A597 68%,#806350 100%) fixed !important;
+}
+.dash [hidden]{display:none !important}
+.dash .ic{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.dash .demo-banner{
+  margin-bottom:14px;padding:12px 16px;border-radius:16px;font-size:13px;
+  background:rgba(194,122,18,.13);color:#7a4d0a;border:1px solid rgba(194,122,18,.32);
+}
+
+/* HERO */
+.dash .pf-hero{
+  display:flex;align-items:center;gap:22px;flex-wrap:wrap;
+  padding:34px 8px 26px;margin-bottom:18px;border-radius:0;color:var(--plum);box-shadow:none;background:none;
+  animation:pf-in .8s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes pf-in{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+.dash .pf-avatar{
+  width:78px;height:78px;border-radius:50%;display:grid;place-items:center;flex:none;
+  font:800 28px "Manrope",sans-serif;letter-spacing:-.02em;color:#FBF3EC;
+  background:linear-gradient(135deg,#8B0909,#B20808);border:2px solid #EDD9CC;box-shadow:0 8px 24px rgba(46,21,18,.25);
+}
+.dash .pf-hero h1{margin:0;font-family:"Anton","Bebas Neue",Impact,sans-serif;font-weight:400;text-transform:uppercase;font-size:clamp(44px,7vw,84px);line-height:.95;letter-spacing:.01em;color:var(--plum)}
+.dash .pf-hero p{margin:8px 0 0;font-size:14px;color:var(--muted)}
+.dash .pf-since{margin-left:auto;padding:10px 14px;border-radius:14px;font-size:12px;
+  background:rgba(255,255,255,.55);border:1px solid #B8A597;color:var(--plum)}
+
+/* GRID + PANELS */
+.dash .pf-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:18px;align-items:start}
+.dash .pf-col{display:grid;gap:18px}
+.dash .panel{
+  border-radius:32px;overflow:hidden;background:linear-gradient(160deg,#FBF3EC 0%,#F6EBE3 45%,#E6D2C4 100%);border:1px solid #B8A597;
+  box-shadow:0 18px 50px rgba(46,21,18,.16);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+}
+.dash .panel-head{padding:22px 28px;border-bottom:1px solid var(--line)}
+.dash .panel-head h2{margin:0;font:800 20px "Manrope",sans-serif;letter-spacing:-.02em;color:var(--plum)}
+.dash .panel-head p{margin:6px 0 0;font-size:13px;color:var(--muted)}
+.dash .panel-body{padding:22px 28px 26px}
+
+/* FORM */
+.dash .field{display:grid;gap:6px;margin-bottom:16px}
+.dash .field label{font-size:13px;font-weight:600;color:var(--plum)}
+.dash .field input[type="text"],.dash .field input[type="tel"],.dash .field input[type="password"]{
+  width:100%;padding:13px 15px;border-radius:14px;font:inherit;font-size:15px;color:var(--plum);
+  background:#D9C2B2;border:1.5px solid #806350;box-shadow:0 4px 12px rgba(46,21,18,.12);transition:border-color .2s,box-shadow .2s;
+}
+.dash .field input:focus{outline:none;border-color:var(--violet);box-shadow:0 0 0 4px rgba(139,9,9,.2)}
+.dash .field input[readonly]{background:#E6D2C4;color:var(--muted);border-color:#B8A597;box-shadow:none}
+.dash .field small{font-size:12px;color:var(--muted)}
+.dash .field-error{font-size:12px;color:var(--red);min-height:0}
+.dash .field-error:empty{display:none}
+
+.dash .btn-primary{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:13px 24px;border:0;border-radius:999px;cursor:pointer;font:700 14px "Manrope",sans-serif;
+  color:#FBF3EC;background:linear-gradient(135deg,#8B0909,#B20808);transition:transform .2s,box-shadow .2s,opacity .2s;
+}
+.dash .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(46,21,18,.3)}
+.dash .btn-primary:disabled{opacity:.55;cursor:default;transform:none;box-shadow:none}
+.dash .form-status{margin:14px 0 0;font-size:13px;min-height:18px}
+.dash .form-status.ok{color:#1d8a62}
+.dash .form-status.err{color:var(--red)}
+
+/* TOGGLE */
+.dash .toggle-row{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.dash .toggle-row b{display:block;font:600 15px "Manrope",sans-serif;color:var(--plum)}
+.dash .toggle-row span.sub{font-size:13px;color:var(--muted)}
+.dash .switch{position:relative;width:52px;height:30px;flex:none}
+.dash .switch input{position:absolute;inset:0;opacity:0;cursor:pointer;margin:0;width:100%;height:100%}
+.dash .switch i{position:absolute;inset:0;border-radius:999px;background:#B8A597;transition:background .2s;pointer-events:none}
+.dash .switch i:after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 2px 6px rgba(46,21,18,.3)}
+.dash .switch input:checked + i{background:var(--green)}
+.dash .switch input:checked + i:after{transform:translateX(22px)}
+.dash .switch input:focus-visible + i{outline:2px solid var(--violet);outline-offset:3px}
+
+/* JOURNEY SUMMARY */
+.dash .jr-row{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid rgba(74,54,44,.12);font-size:14px}
+.dash .jr-row:first-child{border-top:0;padding-top:0}
+.dash .jr-row span{color:var(--muted)}
+.dash .jr-row strong{color:var(--plum);text-align:right;font-weight:600}
+.dash .jr-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.dash .jr-link{
+  display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;font-size:13px;font-weight:600;
+  color:var(--violet);background:rgba(255,255,255,.6);border:1px solid #B8A597;text-decoration:none;transition:background .2s;
+}
+.dash .jr-link:hover{background:#fff;color:var(--plum)}
+
+.dash a:focus-visible,.dash button:focus-visible{outline:2px solid var(--violet);outline-offset:3px}
+
+@media(max-width:900px){.dash .pf-grid{grid-template-columns:1fr}}
+@media(max-width:600px){
+  .dash{padding:12px 10px 32px}
+  .dash .pf-hero{padding:22px 6px 18px;border-radius:0}
+  .dash .pf-since{margin-left:0}
+  .dash .panel{border-radius:24px}
+  .dash .panel-head,.dash .panel-body{padding-left:20px;padding-right:20px}
+}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms !important;transition-duration:.01ms !important}}
+</style>
+
+<div class="dash">
+
+  <div class="demo-banner" id="pf-error" hidden role="status">
+    Could not load your profile. Please refresh the page.
+  </div>
+
+  <!-- HERO -->
+  <section class="pf-hero" aria-labelledby="pf-title">
+    <div class="pf-avatar" id="pf-avatar" aria-hidden="true">{{ passenger.initials }}</div>
+    <div>
+      <h1 id="pf-title">{{ passenger.name }}</h1>
+      <p id="pf-login">Passenger account</p>
+    </div>
+    <p class="pf-since" id="pf-since" hidden></p>
+  </section>
+
+  <div class="pf-grid">
+
+    <div class="pf-col">
+
+      <!-- ACCOUNT DETAILS -->
+      <section class="panel" aria-labelledby="acc-title">
+        <div class="panel-head">
+          <h2 id="acc-title">Account details</h2>
+          <p>Your name appears as &ldquo;First L.&rdquo; to other passengers in chat.</p>
+        </div>
+        <form class="panel-body" id="acc-form" novalidate>
+          <div class="field">
+            <label for="pf-name">Full name</label>
+            <input type="text" id="pf-name" maxlength="60" autocomplete="name">
+            <p class="field-error" id="pf-name-err"></p>
+          </div>
+          <div class="field">
+            <label for="pf-ident">Sign-in ID</label>
+            <input type="text" id="pf-ident" readonly tabindex="-1">
+            <small>Your phone or email used to sign in cannot be changed.</small>
+          </div>
+          <div class="field">
+            <label for="pf-phone">Mobile number</label>
+            <input type="tel" id="pf-phone" inputmode="numeric" maxlength="10" autocomplete="tel-national" placeholder="10-digit number">
+            <p class="field-error" id="pf-phone-err"></p>
+          </div>
+          <button type="submit" class="btn-primary" id="acc-save">Save changes</button>
+          <p class="form-status" id="acc-status" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <!-- PASSWORD -->
+      <section class="panel" aria-labelledby="pw-title">
+        <div class="panel-head">
+          <h2 id="pw-title">Change password</h2>
+          <p>At least 8 characters with upper and lower case, a number and a symbol.</p>
+        </div>
+        <form class="panel-body" id="pw-form" novalidate>
+          <div class="field">
+            <label for="pw-current">Current password</label>
+            <input type="password" id="pw-current" autocomplete="current-password">
+          </div>
+          <div class="field">
+            <label for="pw-new">New password</label>
+            <input type="password" id="pw-new" autocomplete="new-password">
+          </div>
+          <div class="field">
+            <label for="pw-confirm">Confirm new password</label>
+            <input type="password" id="pw-confirm" autocomplete="new-password">
+          </div>
+          <button type="submit" class="btn-primary" id="pw-save">Update password</button>
+          <p class="form-status" id="pw-status" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+    </div>
+
+    <div class="pf-col">
+
+      <!-- ALERT PREFERENCES -->
+      <section class="panel" aria-labelledby="pref-title">
+        <div class="panel-head">
+          <h2 id="pref-title">Alert preferences</h2>
+        </div>
+        <div class="panel-body">
+          <div class="toggle-row">
+            <div>
+              <b id="sms-label">SMS alerts</b>
+              <span class="sub">Get safety updates for your train on your mobile.</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="pf-sms" aria-labelledby="sms-label">
+              <i aria-hidden="true"></i>
+            </label>
+          </div>
+          <p class="form-status" id="sms-status" role="status" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <!-- JOURNEY SUMMARY -->
+      <section class="panel" aria-labelledby="jr-title">
+        <div class="panel-head">
+          <h2 id="jr-title">My journey</h2>
+        </div>
+        <div class="panel-body">
+          <div class="jr-row"><span>Train</span><strong id="jr-train">&mdash;</strong></div>
+          <div class="jr-row"><span>Route</span><strong id="jr-route">&mdash;</strong></div>
+          <div class="jr-row"><span>Reports submitted</span><strong id="jr-reports">&mdash;</strong></div>
+          <div class="jr-links">
+            <a class="jr-link" href="/passenger/journey"><svg class="ic" aria-hidden="true"><use href="#i-compass"/></svg>My Journey</a>
+            <a class="jr-link" href="/passenger/reports"><svg class="ic" aria-hidden="true"><use href="#i-clipboard"/></svg>My Reports</a>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='passenger-profile.js') }}"></script>
+{% endblock %}
